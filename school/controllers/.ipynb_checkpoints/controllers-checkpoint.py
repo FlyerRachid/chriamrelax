@@ -5,6 +5,7 @@ from odoo import http
 class School(http.Controller):
     @http.route('/school', auth='public')
     def index(self, **kw):
+        print('<!!!!!!!!!!!!!!!!!! Option 5 : Télécharger la branche à partir du référentiel distant !!!!!!!!!!!!!!!!!!!>')
         return "Hello, School"
 
 #     @http.route('/school/school/objects', auth='public')
