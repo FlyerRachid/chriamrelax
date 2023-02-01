@@ -1,12 +1,15 @@
 #-*- coding: utf-8 -*-
-from odoo import http
-
+from odoo import http, _
+from odoo.osv import expression
+from odoo.exceptions import AccessError, MissingError
+from collections import OrderedDict
+from odoo.http import request
 
 class School(http.Controller):
     @http.route('/school', auth='public')
     def index(self, **kw):
-        print('<!!!!!!!!!!!!!!!!!! Option 5 : Télécharger la branche à partir du référentiel distant !!!!!!!!!!!!!!!!!!!>')
-        return "Hello, School, we are happy to receive you , how are you ?"
+        name = partner = request.env['res.users'].browse(request.uid).partner_id.name
+        return "Hello, School, we are happy to receive you , how are you %s ?"%(name)
 
 #     @http.route('/school/school/objects', auth='public')
 #     def list(self, **kw):
