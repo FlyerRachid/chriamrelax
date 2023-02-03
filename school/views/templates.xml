@@ -2,6 +2,7 @@
     <data>
 
         <template id="listing">
+           <t t-call="website.layout">
           <h1>Hellow  cc<span t-esc="partner_id.name"/></h1>
           <!--
           <ul>
@@ -12,6 +13,7 @@
             </li>
           </ul>
           -->
+          </t>
         </template>
         <template id="object">
           <h1><t t-esc="object.display_name"/></h1>
