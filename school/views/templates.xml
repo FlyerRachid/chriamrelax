@@ -2,7 +2,7 @@
     <data>
 
         <template id="listing">
-          <h1>Hellow  dd<span t-esc="partner_id.name"/></h1>
+          <h1>Hellow  cc<span t-esc="partner_id.name"/></h1>
           <!--
           <ul>
             <li t-foreach="objects" t-as="object">
