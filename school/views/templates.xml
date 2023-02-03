@@ -1,7 +1,9 @@
 <odoo>
     <data>
-<!--
+
         <template id="listing">
+          <h1>Hellow  dd<span t-esc="partner_id.name"/></h1>
+          <!--
           <ul>
             <li t-foreach="objects" t-as="object">
               <a t-attf-href="#{ root }/objects/#{ object.id }">
@@ -9,6 +11,7 @@
               </a>
             </li>
           </ul>
+          -->
         </template>
         <template id="object">
           <h1><t t-esc="object.display_name"/></h1>
@@ -19,6 +22,6 @@
             </t>
           </dl>
         </template>
--->
+
     </data>
 </odoo>
