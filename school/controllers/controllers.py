@@ -13,7 +13,7 @@ class School(http.Controller):
         partner_id = partner = request.env.user.partner_id
         vals = {}
         vals.update({"partner_id"  : partner_id})
-        return http.request.render('school.listing', vals)
+        return http.request.render('website.school-2', vals)
         
 #     @http.route('/school/school/objects', auth='public')
 #     def list(self, **kw):
