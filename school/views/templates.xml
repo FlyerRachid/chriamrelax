@@ -11,7 +11,7 @@
             }
             </style>
 
-            <h1>Hellow : <span t-esc="partner_id.name"/></h1>
+            <!--<h1>ELavi Hellow : <span t-esc="partner_id.name"/></h1>-->
             <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.1/index.global.min.js'></script>
     <script>
 
@@ -171,7 +171,7 @@
       
       
     </script>
-            
+            <div id='calendar'></div>
           </t>
         </template>
 
