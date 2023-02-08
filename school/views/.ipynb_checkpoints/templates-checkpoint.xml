@@ -66,10 +66,9 @@
 	  },
   
           views: {
-	    timeGridFourDay: {
-	      type: 'timeGrid',
-	      duration: { days: 4 },
-	      buttonText: '4 day'
+	    dayGridMonth: { // name of view
+	       titleFormat: { year: 'numeric', month: 'short' }
+	      // other view-specific options here
 	    }
 	  },
           
