@@ -12,23 +12,153 @@
                 decoration-info="state == 'option'"
                 decoration-muted="state == 'cancel'">
                 <field name="name" string="Number" readonly="1" decoration-bf="1"/>
-                <field name="date_order" string="Order Date" widget="date" optional="show"/>
+                <field name="residence" string="Residence"   readonly="0" decoration-bf="1"/>
+                <field name="partner_id" string="Customer" readonly="1" decoration-bf="1"/>
                 <field name="start_date" string="Start Date" widget="date" optional="show"/>
                 <field name="start_end"  string="End Date"   widget="date" optional="show"/>
-                <field name="state" invisible="1"/>
+                <field name="state" />
             </tree>
         </field>
     </record>
       
-    
+    <!--
     <record model="ir.actions.act_window" id="school.action_window">
       <field name="name">Reservation</field>
       <field name="res_model">chriamrelax.reservation</field>
       <field name="view_mode">tree,form</field>
     </record>
+    -->
       
       
-     
+    <record id="action_reservation_sirius" model="ir.actions.act_window">
+        <field name="name">Sirius</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">chriamrelax.reservation</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <!--<field name="search_view_id" ref="sale_order_view_search_inherit_sale"/>-->
+        <field name="context">{}</field>
+        <field name="domain">[('residence', '=', 'Sirius')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new quotation, the first step of a new sale!
+            </p><p>
+                Once the quotation is confirmed, it becomes a sales order.<br/> You will be able to create an invoice and collect the payment.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_reservation_leeuw" model="ir.actions.act_window">
+        <field name="name">Leeuw</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">chriamrelax.reservation</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <!--<field name="search_view_id" ref="sale_order_view_search_inherit_sale"/>-->
+        <field name="context">{}</field>
+        <field name="domain">[('residence', '=', 'Leeuw')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new quotation, the first step of a new sale!
+            </p><p>
+                Once the quotation is confirmed, it becomes a sales order.<br/> You will be able to create an invoice and collect the payment.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_reservation_orion" model="ir.actions.act_window">
+        <field name="name">Orion</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">chriamrelax.reservation</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <!--<field name="search_view_id" ref="sale_order_view_search_inherit_sale"/>-->
+        <field name="context">{}</field>
+        <field name="domain">[('residence', '=', 'Orion')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new quotation, the first step of a new sale!
+            </p><p>
+                Once the quotation is confirmed, it becomes a sales order.<br/> You will be able to create an invoice and collect the payment.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_reservation_de_bron" model="ir.actions.act_window">
+        <field name="name">De Bron</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">chriamrelax.reservation</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <!--<field name="search_view_id" ref="sale_order_view_search_inherit_sale"/>-->
+        <field name="context">{}</field>
+        <field name="domain">[('residence', '=', 'De Bron')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new quotation, the first step of a new sale!
+            </p><p>
+                Once the quotation is confirmed, it becomes a sales order.<br/> You will be able to create an invoice and collect the payment.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_reservation_polaris" model="ir.actions.act_window">
+        <field name="name">Polaris</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">chriamrelax.reservation</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <!--<field name="search_view_id" ref="sale_order_view_search_inherit_sale"/>-->
+        <field name="context">{}</field>
+        <field name="domain">[('residence', '=', 'Polaris')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new quotation, the first step of a new sale!
+            </p><p>
+                Once the quotation is confirmed, it becomes a sales order.<br/> You will be able to create an invoice and collect the payment.
+            </p>
+        </field>
+    </record>
+    
+      
+    
+    <menuitem name="Chriamrelax" id="school.menu_root"/>
+
+    <menuitem name="Reservation" id="school.menu_1" parent="school.menu_root"/>
+    <menuitem name="Menu 2"      id="school.menu_2" parent="school.menu_root"/>
+      
+    <menuitem name="Sirius" id="school.menu_1_list" parent="school.menu_1"
+          action="action_reservation_sirius"/>
+
+    <menuitem name="Leeuw" id="school.menu_2_list" parent="school.menu_1"
+          action="action_reservation_leeuw"/>
+    
+    <menuitem name="Orion" id="school.menu_3_list" parent="school.menu_1"
+          action="action_reservation_orion"/>
+
+    <menuitem name="De Bro" id="school.menu_4_list" parent="school.menu_1"
+          action="action_reservation_de_bron"/>
+    
+    <menuitem name="Polaris" id="school.menu_5_list" parent="school.menu_1"
+          action="action_reservation_polaris"/>
+    
+    <!--
+    <menuitem id="school_menu_root"
+        name="Chriamrelax"
+        active="False"
+        sequence="30">
+
+        <menuitem id="sale_order_menu"
+            name="Reservation"
+            sequence="10">
+
+            <menuitem id="menu_reservation_sirius"
+                action="action_reservation_sirius"
+                sequence="10"/>
+
+            <menuitem id="menu_reservation_leeuw"
+                name="Orders"
+                action="action_reservation_leeuw"
+                sequence="20"/>
+        </menuitem>
+    </menuitem>
+    -->
+ 
     <!--<menuitem name="Réservation" id="school.reservation" parent="school.menu_root" action="school.action_window"/>-->
       
     <!--<menuitem name="Chriamrelax" id="school.menu_root"/>-->
@@ -74,7 +204,9 @@
 -->
 
     <!-- Top menu item -->
-
+    
+    <!-- Befor -->
+      <!--
     <menuitem name="Réservation Chriamrelax" id="school.menu_root"/>
 
     <menuitem name="Menu 1" id="school.menu_1" parent="school.menu_root"/>
@@ -82,6 +214,8 @@
       
         <menuitem name="List" id="school.menu_1_list" parent="school.menu_1"
               action="school.action_window"/>
+    -->
+    <!-- Befor -->
 -->
     <!-- actions -->
 <!--

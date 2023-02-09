@@ -33,7 +33,7 @@ class Reservation(models.Model):
             ('cancel', "Cancelled"),
         ],
         string="Status",
-        readonly=True, copy=False, index=True,
+        readonly=False, copy=False, index=True,
         tracking=3,
         default='option')
     
@@ -43,7 +43,19 @@ class Reservation(models.Model):
         default=fields.Datetime.now)
     
     start_date = fields.Date(string="Start")
-    start_end  = fields.Date(string="Start")
+    start_end  = fields.Date(string="End")
+    
+    residence = fields.Selection(
+        selection=[
+            ('Leeuw', "Leeuw"),
+            ('Sirius', "Sirius"),
+            ('Orion', "Orion"),
+            ('De Bron', "De Bron"),
+            ('Polaris', "Polaris"),
+        ],
+        string="Home",
+        readonly=False, copy=False, index=True,
+        tracking=3)
 
     
     name = fields.Char()
