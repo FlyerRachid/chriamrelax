@@ -21,15 +21,6 @@
         </field>
     </record>
       
-    <!--
-    <record model="ir.actions.act_window" id="school.action_window">
-      <field name="name">Reservation</field>
-      <field name="res_model">chriamrelax.reservation</field>
-      <field name="view_mode">tree,form</field>
-    </record>
-    -->
-      
-      
     <record id="action_reservation_sirius" model="ir.actions.act_window">
         <field name="name">Sirius</field>
         <field name="type">ir.actions.act_window</field>
