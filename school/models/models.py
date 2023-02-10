@@ -51,7 +51,7 @@ class Price(models.Model):
         """ Get the duration value between the 2 given dates. """
         if not start or not stop:
             return 0
-        duration = (stop - start).total_seconds() / 3600
+        duration = (stop - start).total_seconds() / 3600 
         return round(duration, 2)
             
     start = fields.Datetime(
@@ -63,10 +63,10 @@ class Price(models.Model):
         help="Stop date of an event, without time for full days events")
     start_date = fields.Date(
         'Start Date', store=True, tracking=True,
-        compute='_compute_dates', inverse='_inverse_dates')
+        compute='_compute_dates')
     stop_date = fields.Date(
         'End Date', store=True, tracking=True,
-        compute='_compute_dates', inverse='_inverse_dates')
+        compute='_compute_dates')
     duration = fields.Float('Duration', compute='_compute_duration', store=True, readonly=False)
     
     residence_id = fields.Many2one(
@@ -85,7 +85,9 @@ class Price(models.Model):
         readonly=False, copy=False, index=True,
         tracking=3)
 
-    #price = fields.Monetary(string="Price")
+    price = fields.Float(string="Price")
+    
+    name = fields.Char('Name', required=True)
 
     
     

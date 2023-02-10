@@ -10,20 +10,36 @@
         <field name="arch" type="xml">
             <tree string="Pricing" sample="1">
                 <field name="residence"  string="Residence"    decoration-bf="1"/>
-                <field name="start"      string="Start Date" readonly="0"/>
-                <field name="stop"       string="End Date"   readonly="0"/>
+                <field name="start"      string="Start Date"   readonly="0"/>
+                <field name="stop"       string="End Date"     readonly="0"/>
                 <field name="duration"   string="duration"/> 
-                <!--<field name="price"      widget="monetary"/> -->
-                
+                <field name="price"      widget="monetary"/>
+                <field name="name"       string="Name"/>
             </tree>
         </field>
     </record>
+      
+    
+        <record id="view_price_calendar" model="ir.ui.view">
+        <field name="name">chriamrelax.price.calendar</field>
+        <field name="model">chriamrelax.price</field>
+        <field name="priority" eval="2"/>
+        <field name="arch" type="xml">
+            <calendar js_class="attendee_calendar" mode="month" string="Meetings" date_start="start" date_stop="stop" date_delay="duration" color="name" quick_add="False"
+                event_open_popup="true"
+                event_limit="5">
+                <field name="price" widget="monetary"/>
+            </calendar>
+        </field>
+    </record>
+
+      
       
     <record id="action_price_sirius" model="ir.actions.act_window">
         <field name="name">Sirius</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">chriamrelax.price</field>
-        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_mode">calendar,tree,form</field>
         <!--<field name="search_view_id" ref="sale_order_view_search_inherit_sale"/>-->
         <field name="context">{}</field>
         <field name="domain">[('residence', '=', 'Sirius')]</field>
@@ -40,7 +56,7 @@
         <field name="name">Leeuw</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">chriamrelax.price</field>
-        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_mode">calendar,tree,form</field>
         <!--<field name="search_view_id" ref="sale_order_view_search_inherit_sale"/>-->
         <field name="context">{}</field>
         <field name="domain">[('residence', '=', 'Leeuw')]</field>
@@ -57,7 +73,7 @@
         <field name="name">Orion</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">chriamrelax.price</field>
-        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_mode">calendar,tree,form</field>
         <!--<field name="search_view_id" ref="sale_order_view_search_inherit_sale"/>-->
         <field name="context">{}</field>
         <field name="domain">[('residence', '=', 'Orion')]</field>
@@ -74,7 +90,7 @@
         <field name="name">De Bron</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">chriamrelax.price</field>
-        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_mode">calendar,tree,form</field>
         <!--<field name="search_view_id" ref="sale_order_view_search_inherit_sale"/>-->
         <field name="context">{}</field>
         <field name="domain">[('residence', '=', 'De Bron')]</field>
@@ -91,7 +107,7 @@
         <field name="name">Polaris</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">chriamrelax.price</field>
-        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_mode">calendar,tree,form</field>
         <!--<field name="search_view_id" ref="sale_order_view_search_inherit_sale"/>-->
         <field name="context">{}</field>
         <field name="domain">[('residence', '=', 'Polaris')]</field>
