@@ -1,3 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_chriamrelax_reservation,chriamrelax.reservation,model_chriamrelax_reservation,base.group_user,1,1,1,1
 access_chriamrelax_price,chriamrelax.price,model_chriamrelax_price,base.group_user,1,1,1,1
+access_chriamrelax_residence,chriamrelax.residence,model_chriamrelax_residence,base.group_user,1,1,1,1

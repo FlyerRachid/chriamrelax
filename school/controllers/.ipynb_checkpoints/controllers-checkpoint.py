@@ -23,13 +23,13 @@ class School(http.Controller):
         backgroundColor_SELECTION = {
                 'Semaine'      : '#FFE033',
 		        'Week-end'     : '#C7FF33',
-                'Semi-Semaine' : '#33E6FF',
+                'Mi-Semaine' : '#33E6FF',
 	    }
         
-        backgroundColor_SELECTION = {
-                'Semaine'      : '#FFE033',
-		        'Week-end'     : '#C7FF33',
-                'Semi-Semaine' : '#33E6FF',
+        borderColor_SELECTION = {
+                'Semaine'      : 'red',
+		        'Week-end'     : 'green',
+                'Mi-Semaine'   : 'red',
 	    }
 
         
@@ -42,7 +42,8 @@ class School(http.Controller):
             data.update({"title"  : rec.name})
             data.update({"start"  : str(rec.start_date)})
             data.update({"end"    : str(rec.stop_date + timedelta(days=1))})   
-            data.update({"backgroundColor" :  backgroundColor_SELECTION[rec.name]})   
+            #data.update({"backgroundColor" :  backgroundColor_SELECTION[rec.name]})   
+            data.update({"borderColor_SELECTION" :  borderColor_SELECTION[rec.name]})  
            
             events.append(data)
         
