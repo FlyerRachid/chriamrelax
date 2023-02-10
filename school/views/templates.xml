@@ -1,6 +1,43 @@
 <odoo>
     <data>
 
+        
+        <template id="calendar_chriamrelax">
+          <t t-call="website.layout">
+            <style>
+            #calendar {
+              max-width: 800px;
+              margin: 40px auto;
+              padding: 0 10px;
+            }
+            </style>
+
+            <!--<h1>ELavi Hellow : <span t-esc="partner_id.name"/></h1>-->
+            <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.1/index.global.min.js'></script>
+            <t t-raw="calendar_js"/>
+              
+            <div class="container">
+              <div class="row">
+                  
+                <div class="col-sm">
+                   <div id='calendar'></div>
+                </div>
+                  
+                <div class="col-sm">
+                  One of three columns
+                </div>
+
+              </div>
+            </div>
+          </t>
+        </template>
+        
+        
+        
+        
+        
+        
+        
         <template id="listing">
           <t t-call="website.layout">
             <style>
@@ -26,6 +63,7 @@
 	    };
     
         var calendarEl = document.getElementById('calendar');
+        
         var calendar = new FullCalendar.Calendar(calendarEl, {
           themeSystem: 'bootstrap4',
           locale : 'fr',
