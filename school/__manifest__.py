@@ -33,6 +33,11 @@
     'demo': [
         #'demo/demo.xml',
     ],
+        'assets': {
+        'web.assets_frontend': [
+            'school/static/src/js/createDefine.js',
+        ],
+    },
     'installable': True,
     'application': True,
     'license': 'LGPL-3',
