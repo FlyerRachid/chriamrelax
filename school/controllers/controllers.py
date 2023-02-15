@@ -16,7 +16,7 @@ class School(http.Controller):
         return http.request.render('school.listing', vals)
     
     
-    @http.route('/calendar', type='http', auth="user", csrf=False, website=True)
+    @http.route('/calendar', type='http', auth="public", csrf=False, website=True)
     def calendar(self, **kw):
         vals = {}
         
@@ -42,12 +42,12 @@ class School(http.Controller):
             data.update({"title"  : rec.name})
             data.update({"start"  : str(rec.start_date)})
             data.update({"end"    : str(rec.stop_date + timedelta(days=1))})   
-            #data.update({"backgroundColor" :  backgroundColor_SELECTION[rec.name]})   
+            data.update({"backgroundColor" :  backgroundColor_SELECTION[rec.name]})   
             data.update({"borderColor_SELECTION" :  borderColor_SELECTION[rec.name]})  
            
             events.append(data)
         
-        calendar_js = "<script> var calendarEl = null;  document.addEventListener('DOMContentLoaded', function() {  calendarEl = document.getElementById('calendar'); var calendar = new FullCalendar.Calendar(calendarEl, {themeSystem: 'bootstrap4',locale : 'fr',initialView: 'dayGridMonth',header: {left: 'prev,next today',center: 'title',right: 'month,basicWeek,basicDay'},navLinks: true,height: 'auto',aspectRatio: 2,events: "+str(events)+",}); calendar.render();}); </script>"
+        calendar_js = "<script> var calendarEl = null;  document.addEventListener('DOMContentLoaded', function() {  calendarEl = document.getElementById('calendar'); var calendar = new FullCalendar.Calendar(calendarEl, {themeSystem: 'bootstrap4',locale : 'fr',initialView: 'dayGridMonth',header: {left: 'prev,next today',center: 'title',right: 'month,basicWeek,basicDay'},navLinks: true,height: 'auto',aspectRatio: 2,events: "+str(events)+",eventClick: function(info) {open_modalRequest(info)},}); calendar.render();}); </script>"
         
         vals.update({"calendar_js"  : calendar_js})
         vals.update({"availablity_ids"  : availablity_ids})

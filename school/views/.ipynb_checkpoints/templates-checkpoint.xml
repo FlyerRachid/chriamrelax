@@ -1,21 +1,63 @@
 <odoo>
     <data>
+       
+        <!--
+        <template id="assets_frontend_formation" inherit_id="website.assets_frontend" name="Assets Frontend Formation">
+              <xpath expr="." position="inside">
+                <script type="text/javascript" src='/school/static/src/js/createDefine.js'></script>
+              </xpath>
+        </template>
+        -->
 
-        
         <template id="calendar_chriamrelax">
           <t t-call="website.layout">
+        
+           <script src="/school/static/src/js/create.js?v=5"/>
+              
             <style>
             #calendar {
-              max-width: 800px;
+              max-width: 1000px;
               margin: 40px auto;
               padding: 0 10px;
             }
             </style>
-
-            <!--<h1>ELavi Hellow : <span t-esc="partner_id.name"/></h1>-->
             <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.1/index.global.min.js'></script>
             <t t-raw="calendar_js"/>
+            
               
+            
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalRequest" id="btn_modalRequest">
+              Launch demo modal
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="modalRequest" tabindex="-1" data-bs-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-fullscreen">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    ...
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+              
+            
+              
+              
+           
+            <div id='calendar'></div>
+              
+            
+            <!--
             <div class="container">
               <div class="row">
                   
@@ -29,14 +71,21 @@
 
               </div>
             </div>
+            -->
+            <!--
+            <div class="container" style="text-align : center;">
+             <h2 style="text-align : center;"> Formation Odoo Js </h2>
+             <div class="o_formation_form mt-3 clearfix">
+               <input type="number"  class="form-control" id="formation_input"  placeholder="Entrer Partner ID "/>
+               <br/>
+               <button id="o_form_formation" type="button" class="btn btn-primary">
+                    Formation <i class="fa fa-chevron-right"></i>
+               </button>
+             </div>
+          </div>
+          -->
           </t>
         </template>
-        
-        
-        
-        
-        
-        
         
         <template id="listing">
           <t t-call="website.layout">
