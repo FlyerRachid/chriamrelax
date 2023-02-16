@@ -23,23 +23,29 @@ class School(http.Controller):
     
     @http.route(['/request'], type='http', auth="public", csrf=False)
     def request(self, **kw):
-        
+        _logger.info("token : %s",(kw)) 
         data = {}
         data['error'] = True
         _logger.info("token : %s",(kw.get('token'))) 
-        
         domaine = []
         domaine.append(('token','=',kw.get('token')))
         record = request.env['chriamrelax.price'].sudo().search(domaine)
         if len(record) == 1:
             data['error'] = False
-            #CREATE THE PARTNER IF NOT EXISTE 
-            #CREATE THE RESERVATION 
             vals = {}
-            vals.update({'partner_id': 3})
-            reservation = http.request.env['chriamrelax.reservation'].sudo().create(vals)
             
-        _logger.info("record ============> : %s",(record)) 
+            vals.update({'partner_name' : kw.get('partner_name')})
+            vals.update({'partner_email': kw.get('partner_email')})
+            vals.update({'partner_phone': kw.get('partner_phone')})
+            
+            vals.update({'token': record.token})
+            vals.update({'start': record.start})
+            vals.update({'stop' : record.stop})
+            vals.update({'residence_id': record.residence_id.id})
+            vals.update({'residence': record.residence})
+
+            reservation = http.request.env['chriamrelax.reservation'].sudo().create(vals)
+        _logger.info("reservation  ::::: %s",(reservation)) 
         
         return json.dumps(data)
 

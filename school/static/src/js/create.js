@@ -70,8 +70,15 @@ function sendRequest(info) {
 
       var token = tab[0];
     
+      var partner_name = document.getElementById('partner_name').value;
+      var partner_email = document.getElementById('partner_email').value;
+      var partner_phone = document.getElementById('partner_phone').value;
+    
       formData.append('token'   ,token);
-      
+      formData.append('partner_name'    ,partner_name);
+      formData.append('partner_email'   ,partner_email);
+      formData.append('partner_phone'   ,partner_phone);
+
       console.log(formData);
 
       http.open('POST', '/request', true);

@@ -12,7 +12,7 @@
         <template id="calendar_chriamrelax">
           <t t-call="website.layout">
         
-           <script src="/school/static/src/js/create.js?v=10"/>
+           <script src="/school/static/src/js/create.js?v=11"/>
               
             <style>
             #calendar {
@@ -47,7 +47,7 @@
                           
                           <div class="mb-3">
                             <label for="InputName" class="form-label">Responsible name *</label>
-                            <input type="text" class="form-control" id="InputName" />
+                            <input type="text" class="form-control" id="partner_name" />
                           </div>
                           
                           <div class="mb-3">
@@ -62,7 +62,7 @@
                           
                           <div class="mb-3">
                             <label for="exampleInputEmail1" class="form-label">Email address *</label>
-                            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" />
+                            <input type="email" class="form-control" id="partner_email" aria-describedby="emailHelp" />
                             <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
                           </div>
                           
@@ -78,7 +78,7 @@
                           
                           <div class="mb-3">
                             <label for="InputGSM" class="form-label">GSM/Telephone *</label>
-                            <input type="text" class="form-control" id="InputGSM" />
+                            <input type="text" class="form-control" id="partner_phone" />
                           </div>
                            
                           <div class="mb-3">

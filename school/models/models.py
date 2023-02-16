@@ -252,7 +252,7 @@ class Reservation(models.Model):
     
     residence_id = fields.Many2one(
         comodel_name='chriamrelax.residence',
-        required=True, index=True,, tracking=True)
+        required=True, index=True, tracking=True)
     
     residence = fields.Selection(
         selection=[
