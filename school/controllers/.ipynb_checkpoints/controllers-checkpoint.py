@@ -31,7 +31,14 @@ class School(http.Controller):
         domaine = []
         domaine.append(('token','=',kw.get('token')))
         record = request.env['chriamrelax.price'].sudo().search(domaine)
-        
+        if len(record) == 1:
+            data['error'] = False
+            #CREATE THE PARTNER IF NOT EXISTE 
+            #CREATE THE RESERVATION 
+            vals = {}
+            vals.update({'partner_id': 3})
+            reservation = http.request.env['chriamrelax.reservation'].sudo().create(vals)
+            
         _logger.info("record ============> : %s",(record)) 
         
         return json.dumps(data)

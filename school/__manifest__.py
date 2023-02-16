@@ -20,7 +20,12 @@
     'version': '0.3',
 
     # any module necessary for this one to work correctly
-    'depends': ['base'],
+    'depends': [ 'base_setup',
+        'mail',
+        'utm',
+        'rating',
+        'portal',
+        'digest',],
 
     # always loaded
     'data': [
