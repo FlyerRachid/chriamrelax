@@ -12,7 +12,7 @@
         <template id="calendar_chriamrelax">
           <t t-call="website.layout">
         
-           <script src="/school/static/src/js/create.js?v=5"/>
+           <script src="/school/static/src/js/create.js?v=10"/>
               
             <style>
             #calendar {
@@ -20,43 +20,91 @@
               margin: 40px auto;
               padding: 0 10px;
             }
+            .modal-title  {color:white !important; margin-left: auto !important;}
+            .modal-header {background-color:#1E79C5 !important;}
+            .modal-header{display:block; text-align:center; color: white; background:#1e7ac5; }
+            .modal-title{color: white; display: inline}
+            .card-footer{min-height: 45px !important;}
             </style>
             <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.1/index.global.min.js'></script>
             <t t-raw="calendar_js"/>
             
               
-            
-            <!-- Button trigger modal -->
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalRequest" id="btn_modalRequest">
-              Launch demo modal
-            </button>
+            <div class="row container-fluid" style="margin: auto !important;">
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalRequest" id="btn_modalRequest" style="display:none ;" >
+                </button> 
 
-            <!-- Modal -->
-            <div class="modal fade" id="modalRequest" tabindex="-1" data-bs-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
-              <div class="modal-dialog modal-fullscreen">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <div class="modal-body">
-                    ...
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
+                <!-- Modal -->
+                <div class="modal fade" id="modalRequest" tabindex="-1" data-bs-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Reservation request - Sirius</h5>
+                        <!--<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
+                      </div>
+                      <div class="modal-body">
+                          
+                          <div class="mb-3">
+                            <label for="InputName" class="form-label">Responsible name *</label>
+                            <input type="text" class="form-control" id="InputName" />
+                          </div>
+                          
+                          <div class="mb-3">
+                            <label for="InputOrganization" class="form-label">Organization/Family *</label>
+                            <input type="text" class="form-control" id="InputOrganization" />
+                          </div>
+            
+                          <div class="mb-3">
+                            <label for="InputVAT" class="form-label">VAT number</label>
+                            <input type="text" class="form-control" id="InputVAT" />
+                          </div>
+                          
+                          <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">Email address *</label>
+                            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" />
+                            <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                          </div>
+                          
+                          <div class="mb-3">
+                            <label for="InputStreet" class="form-label">Street *</label>
+                            <input type="text" class="form-control" id="InputStreet" />
+                          </div>
+                          
+                          <div class="mb-3">
+                            <label for="InputPostcode" class="form-label">Postcode *</label>
+                            <input type="text" class="form-control" id="InputPostale" />
+                          </div>
+                          
+                          <div class="mb-3">
+                            <label for="InputGSM" class="form-label">GSM/Telephone *</label>
+                            <input type="text" class="form-control" id="InputGSM" />
+                          </div>
+                           
+                          <div class="mb-3">
+                            <label class="form-label" for="country_id">Country</label>
+                            <select class="form-select" id="country_id" name="country_id">
+                                <option value="">Country...</option>
+                                <t t-foreach="countries" t-as="c">
+                                    <option t-att-value="c.id" t-att-selected="c.id == (country and country.id or -1)">
+                                        <t t-esc="c.name" />
+                                    </option>
+                                </t>
+                            </select> 
+                          </div>
+                          
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" onclick="sendRequest(this)">Reserve</button>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
+
+                <div id='calendar'></div>
+              
             </div>
-              
-            
-              
-              
-           
-            <div id='calendar'></div>
-              
-            
             <!--
             <div class="container">
               <div class="row">

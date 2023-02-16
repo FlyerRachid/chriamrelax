@@ -11,6 +11,7 @@ import uuid
 
 from odoo import api, fields, models, Command
 from odoo.osv.expression import AND
+import re
 
 
 
@@ -27,6 +28,10 @@ class Price(models.Model):
     _description = 'chriamrelax.price'
     _order = 'id desc'
     
+    
+    def _default_access_token(self):
+        return uuid.uuid4().hex
+
     @api.depends('start', 'stop')
     def _compute_dates(self):
         """ Adapt the value of start_date(time)/stop_date(time)
@@ -88,6 +93,7 @@ class Price(models.Model):
     price = fields.Float(string="Price")
     
     name = fields.Char('Name', required=True)
+    token = fields.Char('token', default=_default_access_token)
 
     
     

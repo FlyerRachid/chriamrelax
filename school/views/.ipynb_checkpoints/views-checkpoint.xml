@@ -118,9 +118,10 @@
 
     <menuitem name="Leeuw" id="school.menu_2_list" parent="school.menu_1"
           action="action_reservation_leeuw"/>
-    
+    <!--
     <menuitem name="Orion" id="school.menu_3_list" parent="school.menu_1"
           action="action_reservation_orion"/>
+   -->
 
     <menuitem name="De Bro" id="school.menu_4_list" parent="school.menu_1"
           action="action_reservation_de_bron"/>
