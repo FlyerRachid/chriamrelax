@@ -16,7 +16,7 @@ import re
 
 
 
-class Price(models.Model):
+class Residence(models.Model):
     _name = 'chriamrelax.residence'
     _description = 'chriamrelax.price'
     _order = 'id desc'

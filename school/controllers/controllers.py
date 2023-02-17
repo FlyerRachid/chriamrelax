@@ -9,6 +9,38 @@ import logging
 import requests
 import json
 _logger = logging.getLogger(__name__)
+from odoo.addons.portal.controllers import portal
+from odoo.addons.portal.controllers.portal import pager as portal_pager
+
+
+class CustomerPortal(portal.CustomerPortal):
+
+    def _reservation_get_page_view_values(self, reservation, access_token, **kwargs):
+        values = {
+            'page_name': 'reservation',
+            'reservation': reservation,
+            'reservation_link_section': [],
+        }
+        return self._get_page_view_values(reservation, access_token, values, 'my_reservation_history', False, **kwargs)
+
+
+    @http.route([
+        "/chriamrelax/reservation/<int:reservation_id>",
+        "/chriamrelax/reservation/<int:reservation_id>/<access_token>",
+        '/my/reservation/<int:reservation_id>',
+        '/my/reservation/<int:reservation_id>/<access_token>'
+    ], type='http', auth="public", website=True)
+    def reservations_followup(self, reservation_id=None, access_token=None, **kw):
+        try:
+            reservation_sudo = self._document_check_access('chriamrelax.reservation', reservation_id, access_token)
+        except (AccessError, MissingError):
+            return request.redirect('/my')
+
+        values = self._reservation_get_page_view_values(reservation_sudo, access_token, **kw)
+        _logger.info("values  ::::: %s",(values))
+        return request.render("helpdesk.tickets_followup", values)
+
+    
 
 class School(http.Controller):
     
@@ -37,7 +69,6 @@ class School(http.Controller):
             vals.update({'partner_name' : kw.get('partner_name')})
             vals.update({'partner_email': kw.get('partner_email')})
             vals.update({'partner_phone': kw.get('partner_phone')})
-            
             vals.update({'token': record.token})
             vals.update({'start': record.start})
             vals.update({'stop' : record.stop})
@@ -45,17 +76,17 @@ class School(http.Controller):
             vals.update({'residence': record.residence})
 
             reservation = http.request.env['chriamrelax.reservation'].sudo().create(vals)
-        _logger.info("reservation  ::::: %s",(reservation)) 
+        _logger.info("reservation  ::::: %s",(reservation.access_token)) 
         
         return json.dumps(data)
 
     
-    @http.route('/calendar', type='http', auth="public", csrf=False, website=True)
-    def calendar(self, **kw):
+    @http.route('/calendar/<string:residence_name>', type='http', auth="public", csrf=False, website=True)
+    def calendar(self, residence_name = None, **kw):
         
         _logger.error('')
         _logger.info("")     
-        _logger.exception("")
+        _logger.exception()
         
         vals = {}
         
@@ -72,10 +103,13 @@ class School(http.Controller):
 	    }
 
         
-        events = []
         
-        availablity_ids = request.env['chriamrelax.price'].sudo().search([])
+
+        domain = []
+        domain.append(('residence_id.name','=',residence_name.title()))
+        availablity_ids = request.env['chriamrelax.price'].sudo().search(domain)
         
+        events = [] 
         for rec in availablity_ids :
             data = {}
             data.update({"system_id" : rec.id})
