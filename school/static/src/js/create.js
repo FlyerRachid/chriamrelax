@@ -61,8 +61,6 @@ function sendRequest(info) {
       tab[0].push("message")
       const doseTime = tab.slice(1, tab.length);
       */
-      
-    
       var formData = new FormData();
       var http     = new XMLHttpRequest();
 
@@ -70,14 +68,22 @@ function sendRequest(info) {
 
       var token = tab[0];
     
-      var partner_name = document.getElementById('partner_name').value;
+      var partner_name  = document.getElementById('partner_name').value;
       var partner_email = document.getElementById('partner_email').value;
       var partner_phone = document.getElementById('partner_phone').value;
+    
+      var partner_street  = document.getElementById('partner_street').value;
+      var partner_zip     = document.getElementById('partner_zip').value;
+      var partner_country = document.getElementById('partner_country').value;
     
       formData.append('token'   ,token);
       formData.append('partner_name'    ,partner_name);
       formData.append('partner_email'   ,partner_email);
       formData.append('partner_phone'   ,partner_phone);
+      formData.append('partner_street'  ,partner_street);
+      formData.append('partner_zip'     ,partner_zip);
+      formData.append('partner_country' ,partner_country);
+
 
       console.log(formData);
 
@@ -89,10 +95,12 @@ function sendRequest(info) {
            var json = JSON.parse(http.responseText);
            
            if (json.error == true){
-               console.log('ERROR : ',json.error);
-            
+               console.log('ERROR : ',json.error,json.html);
+               document.getElementById('warning_request').style.display = "block";
+               document.getElementById('warning_request').innerHTML     = json.html 
            }else if(json.error == false){
-                 console.log('ERROR : ',json.error);
+               console.log('ERROR : ',json.error);
+                  
              }
                 
          }

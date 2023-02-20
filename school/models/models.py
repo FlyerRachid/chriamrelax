@@ -187,11 +187,36 @@ class Reservation(models.Model):
         for rec in self:
             if rec._get_partner_phone_update():
                 rec.partner_id.phone = rec.partner_phone
+    
+    @api.depends('partner_id.street')
+    def _compute_partner_street(self):
+        for rec in self:
+            if rec.partner_id:
+                rec.partner_street = rec.partner_id.street
+
+    def _get_partner_street_update(self):
+        self.ensure_one()
+        if self.partner_id and self.partner_street != self.partner_id.street:
+            ticket_street_formatted = self.partner_street or False
+            partner_street_formatted = self.partner_id.street or False
+            return ticket_street_formatted != partner_street_formatted
+        return False
+    
+    def _inverse_partner_street(self):
+        for rec in self:
+            if rec._get_partner_street_update():
+                rec.partner_id.street = rec.partner_street
                 
     partner_id     = fields.Many2one('res.partner', string='Customer', tracking=True)
     partner_name   = fields.Char(string='Customer Name', compute='_compute_partner_name', store=True, readonly=False)
     partner_email  = fields.Char(string='Customer Email', compute='_compute_partner_email', inverse="_inverse_partner_email", store=True, readonly=False)
     partner_phone  = fields.Char(string='Customer Phone', compute='_compute_partner_phone', inverse="_inverse_partner_phone", store=True, readonly=False)
+    partner_street = fields.Char(string='Customer Street', compute='_compute_partner_street', inverse="_inverse_partner_street", store=True, readonly=False)
+    
+    #partner_zip         = fields.Char(string='Customer Zip', compute='_compute_partner_zip', inverse="_inverse_partner_zip", store=True, readonly=False)
+    #partner_country_id  = fields.Char(string='Customer Country', compute='_compute_partner_country_id', inverse="_inverse_partner_country_id", store=True, readonly=False)
+    
+    
     is_partner_email_update = fields.Boolean('Partner Email will Update', compute='_compute_is_partner_email_update')
     is_partner_phone_update = fields.Boolean('Partner Phone will Update', compute='_compute_is_partner_phone_update')
     

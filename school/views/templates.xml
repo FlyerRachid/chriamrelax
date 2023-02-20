@@ -9,7 +9,6 @@
         </template>
         -->
         
-        
         <template id="reservation_followup" name="Helpdesk Tickets">
             
             <t t-call="portal.portal_layout">
@@ -49,6 +48,7 @@
                                     </div>
                                 </li>
                                 -->
+                                <!--
                                 <li id="ticket-nav" class="list-group-item ps-0 flex-grow-1" t-ignore="true" role="complementary">
                                     <ul class="nav flex-column">
                                         <li class="nav-item" id="nav-header">
@@ -63,6 +63,7 @@
                                         </li>
                                     </ul>
                                 </li>
+                                -->
                                 <!--
                                 <li id="ticket-links" t-if="ticket_link_section" class="list-group-item flex-grow-1" t-ignore="true" role="complementary" invisible="1">
                                     <ul class="nav flex-column">
@@ -159,7 +160,7 @@
         <template id="calendar_chriamrelax">
           <t t-call="website.layout">
         
-           <script src="/school/static/src/js/create.js?v=11"/>
+           <script src="/school/static/src/js/create.js?v=14"/>
               
             <style>
             #calendar {
@@ -215,22 +216,22 @@
                           
                           <div class="mb-3">
                             <label for="InputStreet" class="form-label">Street *</label>
-                            <input type="text" class="form-control" id="InputStreet" />
+                            <input type="text" class="form-control" id="partner_street" />
                           </div>
                           
                           <div class="mb-3">
                             <label for="InputPostcode" class="form-label">Postcode *</label>
-                            <input type="text" class="form-control" id="InputPostale" />
+                            <input type="text" class="form-control" id="partner_zip" />
                           </div>
                           
                           <div class="mb-3">
-                            <label for="InputGSM" class="form-label">GSM/Telephone *</label>
+                            <label for="InputGSM" class="form-label">Phone *</label>
                             <input type="text" class="form-control" id="partner_phone" />
                           </div>
                            
                           <div class="mb-3">
-                            <label class="form-label" for="country_id">Country</label>
-                            <select class="form-select" id="country_id" name="country_id">
+                            <label class="form-label" for="country_id">Country *</label>
+                            <select class="form-select" id="partner_country" >
                                 <option value="">Country...</option>
                                 <t t-foreach="countries" t-as="c">
                                     <option t-att-value="c.id" t-att-selected="c.id == (country and country.id or -1)">
@@ -242,6 +243,9 @@
                           
                       </div>
                       <div class="modal-footer">
+                        <div class="alert alert-warning" style="width:100%;display:none;text-align : center;" id="warning_request">
+                        </div>
+                        <br/>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-primary" onclick="sendRequest(this)">Reserve</button>
                       </div>
