@@ -8,6 +8,153 @@
               </xpath>
         </template>
         -->
+        
+        
+        <template id="reservation_followup" name="Helpdesk Tickets">
+            
+            <t t-call="portal.portal_layout">
+                
+                <t t-set="wrapwrap_classes" t-value="'o_portal_bg_dark'"/>
+             
+                <div class="row mt16 o_project_portal_sidebar">
+                    <t t-call="portal.portal_record_sidebar">
+                        <t t-set="classes" t-value="'col-lg-auto d-print-none'"/>
+
+                        <t t-set="entries">
+                            <ul class="list-group list-group-flush flex-wrap flex-row flex-lg-column">
+                                <!--
+                                <li t-if="ticket.team_id.allow_portal_ticket_closing and not ticket.stage_id.fold and not ticket.closed_by_partner" class="list-group-item flex-grow-1">
+                                    <div class="d-grid flex-sm-nowrap">
+                                        <button class="btn btn-secondary pt-1" data-bs-target="#helpdesk_ticket_close_modal" data-bs-toggle="modal">
+                                            Close Ticket
+                                        </button>
+                                    </div>
+
+                                    <div class="modal" tabindex="-1" role="dialog" id="helpdesk_ticket_close_modal">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Close ticket</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p>Are you sure you wish to proceed?</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <a role="button" class="btn btn-primary" t-att-href="'/my/ticket/close/%s/%s' % (ticket.id, ticket.access_token)">Close the ticket</a>
+                                                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Discard</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                -->
+                                <li id="ticket-nav" class="list-group-item ps-0 flex-grow-1" t-ignore="true" role="complementary">
+                                    <ul class="nav flex-column">
+                                        <li class="nav-item" id="nav-header">
+                                            <a class="nav-link ps-3" href="#card_header" style="max-width: 200px;">
+                                                Reservation
+                                            </a>
+                                        </li>
+                                        <li class="nav-item" id="nav-chat">
+                                            <a class="nav-link ps-3" href="#ticket_chat">
+                                                History
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <!--
+                                <li id="ticket-links" t-if="ticket_link_section" class="list-group-item flex-grow-1" t-ignore="true" role="complementary" invisible="1">
+                                    <ul class="nav flex-column">
+                                        <t t-foreach="sorted(ticket_link_section, key=lambda r: r['sequence'])" t-as="ticket_link">
+                                            <li class="nav-item">
+                                                <a class="nav-link ps-0" t-att-href="ticket_link['access_url']">
+                                                    <t t-out="ticket_link['title']"/>
+                                                </a>
+                                            </li>
+                                        </t>
+                                    </ul>
+                                </li>
+                                -->
+                                <li t-if="reservation.partner_id" class="list-group-item flex-grow-1">
+                                    <!--
+                                    <div class="col-12 col-md-12 pb-2" t-if="ticket.user_id">
+                                        <strong>Assigned to</strong>
+                                        <div class="d-flex ps-3 flex-nowrap">
+                                            <img class="rounded-circle mt-1 o_portal_contact_img" t-att-src="image_data_uri(ticket.user_id.avatar_1024)" alt="Contact"/>
+                                            <div class="ms-2">
+                                                <div t-out="ticket.user_id" t-options='{"widget": "contact", "fields": ["name"]}' class="mt-2"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    -->
+                                    <div class="col-12 col-md-12 pb-2" t-if="reservation.partner_id">
+                                        <strong>Customer</strong>
+                                        <div class="d-flex ps-3 flex-nowrap">
+                                            <img class="rounded-circle mt-1 o_portal_contact_img" t-att-src="image_data_uri(reservation.partner_id.avatar_1024)" alt="Contact"/>
+                                            <div class="ms-2">
+                                                <div t-field="reservation.partner_id" t-options='{"widget": "contact", "fields": ["name"]}'/>
+                                                <a t-attf-href="mailto:{{reservation.partner_id.email}}" t-if="reservation.partner_id.email"><div t-field="reservation.partner_id" t-options='{"widget": "contact", "fields": ["email"]}'/></a>
+                                                <a t-attf-href="tel:{{reservation.partner_id.phone}}" t-if="reservation.partner_id.phone"><div t-field="reservation.partner_id" t-options='{"widget": "contact", "fields": ["phone"]}'/></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </t>
+                    </t>
+                    <div id="ticket_content" class="col-12 col-lg justify-content-end">
+                        <div id="card" class="card">
+                            <div id="card_header" class="card-header container" data-anchor="true">
+                                <div class="row gs-0">
+                                    <div class="col-md">
+                                        <h5 class="row mx-1 mb-1 mb-md-0">
+                                            <div class="col-9 text-truncate">
+                                                <span t-field="reservation.name"/>
+                                                <small class="text-muted "> (#<span t-field="reservation.id"/>)</small>
+                                            </div>
+                                            <div class="col-3 text-end">
+                                                <small class="text-end">Stage:</small>
+                                                <span t-field="reservation.state" class=" badge rounded-pill text-bg-info" title="Current stage of this ticket"/>
+                                            </div>
+                                        </h5>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="card_body" class="card-body">
+                                <div class="row mb-4">
+                                    <strong class="col-lg-2">Reported on</strong>
+                                    <span class="col-lg-10" t-field="reservation.create_date" t-options='{"widget": "datetime", "hide_seconds": True}'/>
+                                </div>
+                                <!--
+                                <div class="row mb-4" t-if="ticket.team_id.portal_show_rating">
+                                    <strong class="col-lg-2">Managed by</strong>
+                                    <span class="col-lg-10">
+                                        <a t-attf-href="/helpdesk/rating/#{ticket.team_id.id}">
+                                            <span t-field="ticket.team_id.name"/>
+                                        </a>
+                                    </span>
+                                </div>
+                                <div t-if="not is_html_empty(ticket.description)" class="row mb-4" name="description">
+                                    <div class="col-lg-12" t-field="ticket.description"/>
+                                </div>
+                                -->
+                            </div>
+                        </div>
+                        
+                        <div class="o_portal_messages_container mt32" id="ticket_chat" data-anchor="true">
+                            <h4><strong>Message and communication history</strong></h4>
+                            <t t-call="portal.message_thread">
+                                <t t-set="token" t-value="reservation.access_token"/>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            
+            </t>
+         </template>
+
+        
 
         <template id="calendar_chriamrelax">
           <t t-call="website.layout">

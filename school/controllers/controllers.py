@@ -35,10 +35,9 @@ class CustomerPortal(portal.CustomerPortal):
             reservation_sudo = self._document_check_access('chriamrelax.reservation', reservation_id, access_token)
         except (AccessError, MissingError):
             return request.redirect('/my')
-
         values = self._reservation_get_page_view_values(reservation_sudo, access_token, **kw)
-        _logger.info("values  ::::: %s",(values))
-        return request.render("helpdesk.tickets_followup", values)
+        _logger.info("values  :::::::::::::::::::: %s",(values))
+        return request.render("school.reservation_followup", values)
 
     
 
@@ -86,7 +85,7 @@ class School(http.Controller):
         
         _logger.error('')
         _logger.info("")     
-        _logger.exception()
+        _logger.exception("")
         
         vals = {}
         
