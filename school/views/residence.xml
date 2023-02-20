@@ -9,6 +9,7 @@
         <field name="priority">2</field>
         <field name="arch" type="xml">
             <tree string="Pricing" sample="1">
+                <field name="token"  string="Token"            decoration-bf="1"/>
                 <field name="residence"  string="Residence"    decoration-bf="1"/>
                 <field name="start"      string="Start Date"   readonly="0"/>
                 <field name="stop"       string="End Date"     readonly="0"/>
@@ -128,9 +129,10 @@
 
     <menuitem name="Leeuw" id="school.menu_2_price" parent="school.menu_2"
           action="action_price_leeuw"/>
-    
+    <!--
     <menuitem name="Orion" id="school.menu_3_price" parent="school.menu_2"
           action="action_price_orion"/>
+   -->
 
     <menuitem name="De Bro" id="school.menu_4_price" parent="school.menu_2"
           action="action_price_de_bron"/>
