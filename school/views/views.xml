@@ -86,8 +86,11 @@
                         <group>
                             <field name="partner_id"/>
                             <field name="partner_name" attrs="{'invisible': [('partner_id', '!=', False)]}"/>
-                            <field name="is_partner_email_update" invisible="1"/>
-                            <field name="is_partner_phone_update" invisible="1"/>
+                            <field name="is_partner_email_update"  invisible="1"/>
+                            <field name="is_partner_phone_update"  invisible="1"/>
+                            <field name="is_partner_street_update" invisible="1"/>          
+                            <field name="is_partner_zip_update"    invisible="1"/>
+
                             <label for="partner_email" string="Email"/>
                             <div class="o_row o_row_readonly">
                                 <field name="partner_email" widget="email" string="email"/>
@@ -100,6 +103,17 @@
                                 <span class="fa fa-exclamation-triangle text-warning oe_edit_only"
                                 title="By saving this change, the customer phone number will also be updated." attrs="{'invisible': [('is_partner_phone_update', '=', False)]}"/>
                             </div>
+                            
+                            
+                            <field name="partner_street" placeholder="Street..." class="o_address_street"  string="Street"/>
+                            <span class="fa fa-exclamation-triangle text-warning oe_edit_only"
+                                title="By saving this change, the customer phone number will also be updated." attrs="{'invisible': [('is_partner_street_update', '=', False)]}"/>
+                            <field name="partner_zip"   placeholder="ZIP"      string="Zip" class="o_address_zip" />
+                            <span class="fa fa-exclamation-triangle text-warning oe_edit_only"
+                                title="By saving this change, the customer phone number will also be updated." attrs="{'invisible': [('is_partner_zip_update', '=', False)]}"/>
+                            
+                            <field name="partner_country_id" placeholder="Country" class="o_address_country" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}" />
+                            
                             <field name="email_cc" groups="base.group_no_one"/>
                         </group>
                     </group>

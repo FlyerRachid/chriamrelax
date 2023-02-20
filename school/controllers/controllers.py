@@ -89,9 +89,11 @@ class School(http.Controller):
         if len(record) == 1:
             data['error'] = False
             vals = {}
-            vals.update({'partner_name' : name})
-            vals.update({'partner_email': email})
-            vals.update({'partner_phone': phone})
+            vals.update({'partner_name'  : name})
+            vals.update({'partner_email' : email})
+            vals.update({'partner_phone' : phone})
+            vals.update({'partner_street': street})
+            vals.update({'partner_zip'   : zip})
             vals.update({'token': record.token})
             vals.update({'start': record.start})
             vals.update({'stop' : record.stop})
