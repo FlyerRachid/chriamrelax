@@ -112,7 +112,7 @@
                             <span class="fa fa-exclamation-triangle text-warning oe_edit_only"
                                 title="By saving this change, the customer phone number will also be updated." attrs="{'invisible': [('is_partner_zip_update', '=', False)]}"/>
                             
-                            <field name="partner_country_id" placeholder="Country" class="o_address_country" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}" />
+                            <field name="partner_country_id" string="Country" class="o_address_country" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}" />
                             
                             <field name="email_cc" groups="base.group_no_one"/>
                         </group>

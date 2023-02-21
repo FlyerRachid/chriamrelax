@@ -12,6 +12,8 @@ _logger = logging.getLogger(__name__)
 from odoo.addons.portal.controllers import portal
 from odoo.addons.portal.controllers.portal import pager as portal_pager
 import re
+import phonenumbers
+from phonenumbers.phonenumberutil import region_code_for_number
 
 
 class CustomerPortal(portal.CustomerPortal):
@@ -58,8 +60,19 @@ class School(http.Controller):
         regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
         # pass the regular expression
         # and the string into the fullmatch() method
-        data = {}
         return re.fullmatch(regex, email)
+    
+    def _check_phone(self,phone,country_id):
+        pn = phonenumbers.parse(phone)
+        _logger.info(" ==================> %s",(pn))
+        _logger.info(" >>>>>>>>>>>>>>>>>>> %s",(region_code_for_number(pn)))
+        if region_code_for_number(pn) != None:
+            code_    = request.env['res.country'].sudo().browse(int(country_id)).code
+            code     = region_code_for_number(pn)
+            _logger.info(" %s =========<>========== %s",(code_,code))
+            return str(code_ ) == str(code)
+        else:
+            return False
     
     @http.route(['/request'], type='http', auth="public", csrf=False)
     def request(self, **kw):
@@ -78,10 +91,18 @@ class School(http.Controller):
         if not email or not name or not phone or not street or not zip or not country:
             data['html'] = "<strong> Warning ! </strong><span>Please complete all required fields marked with *. </span>"
             return json.dumps(data)
+        
         check_email = self._check_email(email)
         if not check_email:
             data['html'] = "<strong> Warning ! </strong><span>Please enter a valid email ! Example: john@gmail.com </span>";
             return json.dumps(data)
+        
+        """
+        check_phone = self._check_phone(phone,country)
+        if not check_phone:
+            data['html'] = "<strong> Warning ! </strong><span>Please enter a valid phone number !</span>";
+            return json.dumps(data)
+        """
         
         domaine = []
         domaine.append(('token','=',kw.get('token')))
@@ -93,13 +114,15 @@ class School(http.Controller):
             vals.update({'partner_email' : email})
             vals.update({'partner_phone' : phone})
             vals.update({'partner_street': street})
-            vals.update({'partner_zip'   : zip})
+            vals.update({'partner_zip'          : zip})
+            vals.update({'partner_country_id'   : int(country)})
             vals.update({'token': record.token})
             vals.update({'start': record.start})
             vals.update({'stop' : record.stop})
             vals.update({'residence_id': record.residence_id.id})
             vals.update({'residence': record.residence})
             reservation = http.request.env['chriamrelax.reservation'].sudo().create(vals)
+            reservation.action_send_email()
         _logger.info("reservation  ::::: %s",(reservation.access_token)) 
         
         return json.dumps(data)
@@ -125,9 +148,6 @@ class School(http.Controller):
 		        'Week-end'     : 'green',
                 'Mi-Semaine'   : 'red',
 	    }
-
-        
-        
 
         domain = []
         domain.append(('residence_id.name','=',residence_name.title()))
