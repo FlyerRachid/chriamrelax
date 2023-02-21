@@ -172,11 +172,11 @@
             .modal-title{color: white; display: inline}
             .card-footer{min-height: 45px !important;}
             </style>
-             <link
-     rel="stylesheet"
-     href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css"
-   />
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+                 <link
+         rel="stylesheet"
+         href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css"
+       />
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
 
               
             <script src="/school/static/src/js/create.js?v=14"/>
@@ -184,7 +184,7 @@
               
             <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.1/index.global.min.js'></script>
             <t t-raw="calendar_js"/>
-            
+             <!--
              <div class="container">
                <form id="login" onsubmit="process(event)">
                 <p>Enter your phone number:</p>
@@ -194,8 +194,7 @@
                <div class="alert alert-info" style="display: none"></div>
                <div class="alert alert-error" style="display: none"></div>
             </div>
-              
-              
+            -->
             <div class="row container-fluid" style="margin: auto !important;">
                 <!-- Button trigger modal -->
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalRequest" id="btn_modalRequest" style="display:none ;" >
@@ -242,6 +241,16 @@
                             <input type="text" class="form-control" id="partner_zip" />
                           </div>
                           
+                           <div class="mb-3">
+                              <form id="login" onsubmit="process(event)" class="mb-3">
+                                <label for="phone" class="form-label">Phone *</label><br/>
+                                <input class="form-control" id="phone" type="tel" name="phone" />
+                                <input type="submit" class="btn btn-primary" value="Verify" />
+                             </form>
+                               <div class="alert alert-info" style="display: none"></div>
+                               <div class="alert alert-error" style="display: none"></div>
+                          </div>
+                          
                           <div class="mb-3">
                             <label class="form-label" for="country_id">Country *</label>
                             <select class="form-select" id="partner_country" >
@@ -254,10 +263,7 @@
                             </select> 
                           </div>
                           
-                          <div class="mb-3">
-                              <label for="phone" class="form-label">Phone *</label>
-                              <input type="tel" class="form-control" id="partner_phone" />
-                          </div>
+                         
                           
                       </div>
                       <div class="modal-footer">
