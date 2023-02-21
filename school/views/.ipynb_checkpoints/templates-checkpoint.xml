@@ -160,8 +160,6 @@
         <template id="calendar_chriamrelax">
           <t t-call="website.layout">
         
-           <script src="/school/static/src/js/create.js?v=14"/>
-              
             <style>
             #calendar {
               max-width: 1000px;
@@ -174,9 +172,29 @@
             .modal-title{color: white; display: inline}
             .card-footer{min-height: 45px !important;}
             </style>
+             <link
+     rel="stylesheet"
+     href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css"
+   />
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+
+              
+            <script src="/school/static/src/js/create.js?v=14"/>
+            <!--<script src="/school/static/src/js/twilio.js?v=5"/>-->
+              
             <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.1/index.global.min.js'></script>
             <t t-raw="calendar_js"/>
             
+             <div class="container">
+               <form id="login" onsubmit="process(event)">
+                <p>Enter your phone number:</p>
+                <input id="phone" type="tel" name="phone" />
+                <input type="submit" class="btn" value="Verify" />
+               </form> 
+               <div class="alert alert-info" style="display: none"></div>
+               <div class="alert alert-error" style="display: none"></div>
+            </div>
+              
               
             <div class="row container-fluid" style="margin: auto !important;">
                 <!-- Button trigger modal -->
@@ -225,11 +243,6 @@
                           </div>
                           
                           <div class="mb-3">
-                            <label for="InputGSM" class="form-label">Phone *</label>
-                            <input type="text" class="form-control" id="partner_phone" />
-                          </div>
-                           
-                          <div class="mb-3">
                             <label class="form-label" for="country_id">Country *</label>
                             <select class="form-select" id="partner_country" >
                                 <option value="">Country...</option>
@@ -239,6 +252,11 @@
                                     </option>
                                 </t>
                             </select> 
+                          </div>
+                          
+                          <div class="mb-3">
+                              <label for="phone" class="form-label">Phone *</label>
+                              <input type="tel" class="form-control" id="partner_phone" />
                           </div>
                           
                       </div>
@@ -252,37 +270,57 @@
                     </div>
                   </div>
                 </div>
-
                 <div id='calendar'></div>
-              
             </div>
-            <!--
-            <div class="container">
-              <div class="row">
-                  
-                <div class="col-sm">
-                   <div id='calendar'></div>
-                </div>
-                  
-                <div class="col-sm">
-                  One of three columns
-                </div>
+            <script>
+                 //https://www.twilio.com/fr/blog/saisie-numeros-telephone-internationaux-html-javascript
+                 //https://ipinfo.io/account/home
 
-              </div>
-            </div>
-            -->
-            <!--
-            <div class="container" style="text-align : center;">
-             <h2 style="text-align : center;"> Formation Odoo Js </h2>
-             <div class="o_formation_form mt-3 clearfix">
-               <input type="number"  class="form-control" id="formation_input"  placeholder="Entrer Partner ID "/>
-               <br/>
-               <button id="o_form_formation" type="button" class="btn btn-primary">
-                    Formation <i class="fa fa-chevron-right"></i>
-               </button>
-             </div>
-          </div>
-          -->
+                 function getIp(callback) {
+                 fetch('https://ipinfo.io/json?token=ebcc738826df8a', { headers: { 'Accept': 'application/json' }})
+                   .then((resp) => resp.json())
+                   .catch(() => {
+                     return {
+                       country: 'us',
+                     };
+                   })
+                   .then((resp) => callback(resp.country));
+                }
+                 </script>
+                 <script>
+                 const phoneInputField = document.querySelector("#phone");
+                 const phoneInput = window.intlTelInput(phoneInputField, {
+                      preferredCountries: ["BE", "FR", "MA", "US"],
+                      geoIpLookup   : getIp,
+                      utilsScript:
+                        "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+                    });
+
+                 const info  = document.querySelector(".alert-info");
+                 const error = document.querySelector(".alert-error");
+
+
+                 function process(event) {
+
+                 console.log(event);
+
+                 event.preventDefault();
+
+                 const phoneNumber = phoneInput.getNumber();
+
+                 info.style.display = "none";
+                 error.style.display = "none";
+
+                     if (phoneInput.isValidNumber()) {
+                       info.style.display = "";
+                       info.innerHTML = `Phone number in E.164 format: <strong>${phoneNumber}</strong>`;
+                     } else {
+                       error.style.display = "";
+                       error.innerHTML = `Invalid phone number.`;
+                     }
+                }
+             </script>
+            
           </t>
         </template>
         

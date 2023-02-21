@@ -1,7 +1,7 @@
 //alert('Odoo Js ?');
 odoo.define('school.formation_', function (require) {
     "use strict";
-
+    console.log("Odoo Define JS")
     var core = require('web.core');
     var Dialog = require('web.Dialog');     
     var publicWidget = require('web.public.widget'); 
