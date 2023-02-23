@@ -108,6 +108,58 @@ class Reservation(models.Model):
     #sale/models/sale_order.py
     #auth_signup/models/res_users.py
     
+    def xml(self):
+        import xml.etree.ElementTree as ET
+        # create the root element
+        root = ET.Element('items')
+
+        # create child elements
+        item1 = ET.SubElement(root, 'item')
+        item1.set('id', '001')
+        name1 = ET.SubElement(item1, 'name')
+        name1.text = 'Item 1'
+        price1 = ET.SubElement(item1, 'price')
+        price1.text = '$10.00'
+
+        item2 = ET.SubElement(root, 'item')
+        item2.set('id', '002')
+        name2 = ET.SubElement(item2, 'name')
+        name2.text = 'Item 2'
+        price2 = ET.SubElement(item2, 'price')
+        price2.text = '$20.00'
+
+        # create the XML file
+        tree = ET.ElementTree(root)
+        tree.write('/home/odoo/src/user/school/items.xml')
+
+        from lxml import etree
+
+        # create the root element
+        root = etree.Element('items')
+
+        # create child elements
+        item1 = etree.SubElement(root, 'item')
+        item1.set('id', '001')
+        name1 = etree.SubElement(item1, 'name')
+        name1.text = 'Item 1'
+        price1 = etree.SubElement(item1, 'price')
+        price1.text = '$10.00'
+
+        item2 = etree.SubElement(root, 'item')
+        item2.set('id', '002')
+        name2 = etree.SubElement(item2, 'name')
+        name2.text = 'Item 2'
+        price2 = etree.SubElement(item2, 'price')
+        price2.text = '$20.00'
+
+        # create the XML file
+        xml_string = etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8')
+
+        # save the XML file to disk
+        file_path = '/home/odoo/src/user/school/file.xml'
+        with open(file_path, 'wb') as f:
+            f.write(xml_string)
+    
     def action_send_email(self):
         # send email to users with their signup url        
         template = self.env.ref('school.request_email_template')

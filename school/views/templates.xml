@@ -275,7 +275,8 @@
                 </div>
                 <div id='calendar'></div>
             </div>
-            <script>
+            
+             <script>
                  //https://www.twilio.com/fr/blog/saisie-numeros-telephone-internationaux-html-javascript
                  //https://ipinfo.io/account/home
                 
