@@ -62,17 +62,19 @@ class School(http.Controller):
         # and the string into the fullmatch() method
         return re.fullmatch(regex, email)
     
-    def _check_phone(self,phone,country_id):
-        pn = phonenumbers.parse(phone)
-        _logger.info(" ==================> %s",(pn))
-        _logger.info(" >>>>>>>>>>>>>>>>>>> %s",(region_code_for_number(pn)))
-        if region_code_for_number(pn) != None:
-            code_    = request.env['res.country'].sudo().browse(int(country_id)).code
-            code     = region_code_for_number(pn)
-            _logger.info(" %s =========<>========== %s",(code_,code))
-            return str(code_ ) == str(code)
+    def _check_phone(self,val):
+        _logger.info("isValidNumber :::::::  %s",(val.get('isValidNumber') ))
+        #code_    = request.env['res.country'].sudo().browse(int(country_id)).code
+        isValidNumber = val.get('isValidNumber') or False
+        isValidNumber_SELECTION = {
+                'false'      : False,
+		        'true'       : True,
+	    }
+        if isValidNumber:
+            return isValidNumber_SELECTION[isValidNumber]
         else:
             return False
+            
     
     @http.route(['/request'], type='http', auth="public", csrf=False)
     def request(self, **kw):
@@ -97,12 +99,11 @@ class School(http.Controller):
             data['html'] = "<strong> Warning ! </strong><span>Please enter a valid email ! Example: john@gmail.com </span>";
             return json.dumps(data)
         
-        """
-        check_phone = self._check_phone(phone,country)
+        check_phone = self._check_phone(kw)
         if not check_phone:
-            data['html'] = "<strong> Warning ! </strong><span>Please enter a valid phone number !</span>";
+            data['html'] = "<strong> Warning ! </strong><span>Please enter a valid phone number compatible with your country code !</span>";
             return json.dumps(data)
-        """
+        
         
         domaine = []
         domaine.append(('token','=',kw.get('token')))

@@ -179,7 +179,7 @@
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
 
               
-            <script src="/school/static/src/js/create.js?v=14"/>
+            <script src="/school/static/src/js/create.js?v=17"/>
             <!--<script src="/school/static/src/js/twilio.js?v=5"/>-->
               
             <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.1/index.global.min.js'></script>
@@ -261,10 +261,7 @@
                                     </option>
                                 </t>
                             </select> 
-                          </div>
-                          
-                         
-                          
+                          </div> 
                       </div>
                       <div class="modal-footer">
                         <div class="alert alert-warning" style="width:100%;display:none;text-align : center;" id="warning_request">
@@ -281,7 +278,7 @@
             <script>
                  //https://www.twilio.com/fr/blog/saisie-numeros-telephone-internationaux-html-javascript
                  //https://ipinfo.io/account/home
-
+                
                  function getIp(callback) {
                  fetch('https://ipinfo.io/json?token=ebcc738826df8a', { headers: { 'Accept': 'application/json' }})
                    .then((resp) => resp.json())

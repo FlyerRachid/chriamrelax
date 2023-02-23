@@ -41,26 +41,7 @@ function open_modalRequest(info) {
 function sendRequest(info) {
     
       alert("Sending request ....",data[0]);
-      /*
-      var outpute    = obj.getElementsByTagName('INPUT');
-      var token      = outpute[0].value;
-      var message    = document.getElementById('message_med');
-      message.value  = "";
-      var tokenMsg   = document.getElementById('tokenMsg');
-      tokenMsg.value = token;
-      var outpute    = obj.getElementsByTagName('INPUT');
-      var token      = outpute[0].value;
-      var index      = sum.findIndex(function(obj) {return obj[0][0] == token;})
-      console.log(index);
-      const tab      = sum[index];
-      console.log(tab[0][7])
-      if (tab[0][7] != 'M.N.R'){
-          message.value = tab[0][7];
-      }
-      return false;
-      tab[0].push("message")
-      const doseTime = tab.slice(1, tab.length);
-      */
+      
       var formData = new FormData();
       var http     = new XMLHttpRequest();
 
@@ -68,10 +49,9 @@ function sendRequest(info) {
 
       var token = tab[0];
     
-      var partner_name  = document.getElementById('partner_name').value;
-      var partner_email = document.getElementById('partner_email').value;
-      var partner_phone = document.getElementById('partner_phone').value;
-    
+      var partner_name    = document.getElementById('partner_name').value;
+      var partner_email   = document.getElementById('partner_email').value;
+      var partner_phone   = phoneInput.getNumber() || document.getElementById('phone').value;
       var partner_street  = document.getElementById('partner_street').value;
       var partner_zip     = document.getElementById('partner_zip').value;
       var partner_country = document.getElementById('partner_country').value;
@@ -80,12 +60,13 @@ function sendRequest(info) {
       formData.append('partner_name'    ,partner_name);
       formData.append('partner_email'   ,partner_email);
       formData.append('partner_phone'   ,partner_phone);
+      formData.append('isValidNumber'   ,phoneInput.isValidNumber());
+      formData.append('iso2'            ,phoneInput.getSelectedCountryData()['iso2']);
       formData.append('partner_street'  ,partner_street);
       formData.append('partner_zip'     ,partner_zip);
       formData.append('partner_country' ,partner_country);
-
-
-      console.log(formData);
+    
+      console.log(partner_phone,phoneInput.isValidNumber(),phoneInput.getSelectedCountryData()['iso2']);
 
       http.open('POST', '/request', true);
 
