@@ -11,6 +11,9 @@ import json
 _logger = logging.getLogger(__name__)
 from odoo.addons.portal.controllers import portal
 from odoo.addons.portal.controllers.portal import pager as portal_pager
+import re
+import phonenumbers
+from phonenumbers.phonenumberutil import region_code_for_number
 
 
 class CustomerPortal(portal.CustomerPortal):
@@ -49,32 +52,78 @@ class School(http.Controller):
         vals = {}
         vals.update({"partner_id"  : partner_id})
         return http.request.render('school.listing', vals)
-
     
+    
+    def _check_email(self,email):
+        # Make a regular expression
+        # for validating an Email
+        regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
+        # pass the regular expression
+        # and the string into the fullmatch() method
+        return re.fullmatch(regex, email)
+    
+    def _check_phone(self,val):
+        _logger.info("isValidNumber :::::::  %s",(val.get('isValidNumber') ))
+        #code_    = request.env['res.country'].sudo().browse(int(country_id)).code
+        isValidNumber = val.get('isValidNumber') or False
+        isValidNumber_SELECTION = {
+                'false'      : False,
+		        'true'       : True,
+	    }
+        if isValidNumber:
+            return isValidNumber_SELECTION[isValidNumber]
+        else:
+            return False
+            
     
     @http.route(['/request'], type='http', auth="public", csrf=False)
     def request(self, **kw):
-        _logger.info("token : %s",(kw)) 
+        _logger.info("params  :::::::: %s",(kw))
+        
         data = {}
         data['error'] = True
-        _logger.info("token : %s",(kw.get('token'))) 
+        
+        email   = kw.get('partner_email')    or False
+        name    = kw.get('partner_name')     or False
+        phone   = kw.get('partner_phone')    or False
+        street  = kw.get('partner_street')   or False
+        zip     = kw.get('partner_zip')      or False
+        country = kw.get('partner_country')  or False
+        
+        if not email or not name or not phone or not street or not zip or not country:
+            data['html'] = "<strong> Warning ! </strong><span>Please complete all required fields marked with *. </span>"
+            return json.dumps(data)
+        
+        check_email = self._check_email(email)
+        if not check_email:
+            data['html'] = "<strong> Warning ! </strong><span>Please enter a valid email ! Example: john@gmail.com </span>";
+            return json.dumps(data)
+        
+        check_phone = self._check_phone(kw)
+        if not check_phone:
+            data['html'] = "<strong> Warning ! </strong><span>Please enter a valid phone number compatible with your country code !</span>";
+            return json.dumps(data)
+        
+        
         domaine = []
         domaine.append(('token','=',kw.get('token')))
         record = request.env['chriamrelax.price'].sudo().search(domaine)
         if len(record) == 1:
             data['error'] = False
             vals = {}
-            
-            vals.update({'partner_name' : kw.get('partner_name')})
-            vals.update({'partner_email': kw.get('partner_email')})
-            vals.update({'partner_phone': kw.get('partner_phone')})
+            vals.update({'partner_name'  : name})
+            vals.update({'partner_email' : email})
+            vals.update({'partner_phone' : phone})
+            vals.update({'partner_street': street})
+            vals.update({'partner_zip'          : zip})
+            vals.update({'partner_country_id'   : int(country)})
             vals.update({'token': record.token})
             vals.update({'start': record.start})
             vals.update({'stop' : record.stop})
             vals.update({'residence_id': record.residence_id.id})
             vals.update({'residence': record.residence})
-
             reservation = http.request.env['chriamrelax.reservation'].sudo().create(vals)
+            reservation.action_send_email()
         _logger.info("reservation  ::::: %s",(reservation.access_token)) 
         
         return json.dumps(data)
@@ -100,9 +149,6 @@ class School(http.Controller):
 		        'Week-end'     : 'green',
                 'Mi-Semaine'   : 'red',
 	    }
-
-        
-        
 
         domain = []
         domain.append(('residence_id.name','=',residence_name.title()))

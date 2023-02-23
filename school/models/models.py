@@ -105,6 +105,30 @@ class Reservation(models.Model):
     _inherit = ['portal.mixin', 'mail.thread.cc', 'utm.mixin', 'rating.mixin', 'mail.activity.mixin']
     
     
+    #sale/models/sale_order.py
+    #auth_signup/models/res_users.py
+    
+    def action_send_email(self):
+        # send email to users with their signup url        
+        template = self.env.ref('school.request_email_template')
+        assert template._name == 'mail.template'
+        email_values = {
+            'email_cc': False,
+            'auto_delete': True,
+            'recipient_ids': [],
+            'partner_ids': [],
+            'scheduled_date': False,
+        }
+        for user in self.partner_id:
+            if not user.email:
+                raise UserError(_("Cannot send email: user %s has no email address.", user.name))
+            email_values['email_to'] = user.email
+            # TDE FIXME: make this template technical (qweb)
+            with self.env.cr.savepoint():
+                force_send = not(self.env.context.get('import_file', False))
+                template.send_mail(self.id, force_send=force_send, raise_exception=True, email_values=email_values)
+        
+    
     @api.model_create_multi
     def create(self, list_value):
         now = fields.Datetime.now()
@@ -143,7 +167,21 @@ class Reservation(models.Model):
     def _compute_is_partner_phone_update(self):
         for rec in self:
             rec.is_partner_phone_update = rec._get_partner_phone_update()
+            
+    
+    @api.depends('partner_street', 'partner_id')
+    def _compute_is_partner_street_update(self):
+        for rec in self:
+            rec.is_partner_street_update = rec._get_partner_street_update()
 
+    
+    @api.depends('partner_zip', 'partner_id')
+    def _compute_is_partner_zip_update(self):
+        for rec in self:
+            rec.is_partner_zip_update = rec._get_partner_zip_update()
+
+
+    
     def _get_partner_email_update(self):
         self.ensure_one()
         if self.partner_id and self.partner_email != self.partner_id.email:
@@ -187,13 +225,83 @@ class Reservation(models.Model):
         for rec in self:
             if rec._get_partner_phone_update():
                 rec.partner_id.phone = rec.partner_phone
+    
+    @api.depends('partner_id.street')
+    def _compute_partner_street(self):
+        for rec in self:
+            if rec.partner_id:
+                rec.partner_street = rec.partner_id.street
+
+    def _get_partner_street_update(self):
+        self.ensure_one()
+        if self.partner_id and self.partner_street != self.partner_id.street:
+            ticket_street_formatted = self.partner_street or False
+            partner_street_formatted = self.partner_id.street or False
+            return ticket_street_formatted != partner_street_formatted
+        return False
+    
+    def _inverse_partner_street(self):
+        for rec in self:
+            if rec._get_partner_street_update():
+                rec.partner_id.street = rec.partner_street
                 
+
+    
+    @api.depends('partner_id.zip')
+    def _compute_partner_zip(self):
+        for rec in self:
+            if rec.partner_id:
+                rec.partner_zip = rec.partner_id.zip
+
+    def _get_partner_zip_update(self):
+        self.ensure_one()
+        if self.partner_id and self.partner_zip != self.partner_id.zip:
+            ticket_street_formatted = self.partner_zip or False
+            partner_street_formatted = self.partner_id.zip or False
+            return ticket_street_formatted != partner_street_formatted
+        return False
+    
+    def _inverse_partner_zip(self):
+        for rec in self:
+            if rec._get_partner_zip_update():
+                rec.partner_id.zip = rec.partner_zip
+                
+
+    def _get_partner_country_id_update(self):
+        self.ensure_one()
+        if self.partner_id and self.partner_country_id != self.partner_id.country_id:
+            ticket_street_formatted  = self.partner_country_id    or False
+            partner_street_formatted = self.partner_id.country_id or False
+            return ticket_street_formatted != partner_street_formatted
+        return False
+    
+    def _inverse_partner_country_id(self):
+        for rec in self:
+            if rec._get_partner_country_id_update():
+                rec.partner_id.country_id = rec.partner_country_id.id
+          
+    @api.depends('partner_id.country_id')
+    def _compute_partner_country_id(self):
+        for rec in self:
+            if rec.partner_id:
+                rec.partner_country_id = rec.partner_id.country_id.id
+    
+    
     partner_id     = fields.Many2one('res.partner', string='Customer', tracking=True)
     partner_name   = fields.Char(string='Customer Name', compute='_compute_partner_name', store=True, readonly=False)
     partner_email  = fields.Char(string='Customer Email', compute='_compute_partner_email', inverse="_inverse_partner_email", store=True, readonly=False)
     partner_phone  = fields.Char(string='Customer Phone', compute='_compute_partner_phone', inverse="_inverse_partner_phone", store=True, readonly=False)
-    is_partner_email_update = fields.Boolean('Partner Email will Update', compute='_compute_is_partner_email_update')
-    is_partner_phone_update = fields.Boolean('Partner Phone will Update', compute='_compute_is_partner_phone_update')
+    partner_street = fields.Char(string='Customer Street', compute='_compute_partner_street', inverse="_inverse_partner_street", store=True, readonly=False)
+    partner_zip    = fields.Char(string='Customer Zip', compute='_compute_partner_zip', inverse="_inverse_partner_zip", store=True, readonly=False)
+    partner_country_id  = fields.Many2one('res.country',compute='_compute_partner_country_id', inverse="_inverse_partner_country_id",string='Customer Country', store=True, readonly=False)
+    is_partner_email_update      = fields.Boolean('Partner Email will Update', compute='_compute_is_partner_email_update')
+    is_partner_phone_update      = fields.Boolean('Partner Phone will Update', compute='_compute_is_partner_phone_update')
+    is_partner_street_update     = fields.Boolean('Partner Street will Update', compute='_compute_is_partner_street_update')
+    is_partner_zip_update        = fields.Boolean('Partner Zip will Update', compute='_compute_is_partner_zip_update')
+    
+
+    
+    
     
                 
     name = fields.Char(
