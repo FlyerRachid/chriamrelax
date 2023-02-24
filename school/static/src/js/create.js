@@ -23,17 +23,7 @@ function open_modalRequest(info) {
   var token = info.event.extendedProps.token
   data.push(token);
   console.log(data);
-  /*
-  console.log('Data ',info.event.extendedProps);
-  console.log(info.event.start.toLocaleDateString());
-  var fdate = info.event.start.toLocaleString("fr-FR", {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'})
-  console.log(fdate);
-  var system_id    =  info.event.extendedProps.system_id;
-  var residence_id =  info.event.extendedProps.residence_id;
-  data.push(system_id);
-  data.push(residence_id);
-  console.log(data)
-  */
+ 
 }
 
 

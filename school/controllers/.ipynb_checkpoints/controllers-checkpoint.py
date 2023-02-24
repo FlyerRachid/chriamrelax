@@ -96,12 +96,12 @@ class School(http.Controller):
         
         check_email = self._check_email(email)
         if not check_email:
-            data['html'] = "<strong> Warning ! </strong><span>Please enter a valid email ! Example: john@gmail.com </span>";
+            data['html'] = "<strong> Warning ! </strong><span>Please enter a valid email.</span>";
             return json.dumps(data)
         
         check_phone = self._check_phone(kw)
         if not check_phone:
-            data['html'] = "<strong> Warning ! </strong><span>Please enter a valid phone number compatible with your country code !</span>";
+            data['html'] = "<strong> Warning ! </strong><span>Please enter a valid phone number compatible with your country code.</span>";
             return json.dumps(data)
         
         
@@ -123,7 +123,7 @@ class School(http.Controller):
             vals.update({'residence_id': record.residence_id.id})
             vals.update({'residence': record.residence})
             reservation = http.request.env['chriamrelax.reservation'].sudo().create(vals)
-            reservation.xml() #reservation.action_send_email()
+            reservation.action_send_email()
             
         _logger.info("reservation  ::::: %s",(reservation.access_token)) 
         
