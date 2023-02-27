@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    
+    <record id="request_email_template" model="mail.template">
+        <field name="name">Chriamrelax: Request Acknowledgment</field>
+        <field name="model_id" ref="school.model_chriamrelax_reservation"/>
+        <field name="subject">{{ object.name }}</field>
+        <field name="email_from">{{(object.company_id.email_formatted) }}</field>
+        <field name="email_to">{{ (object.partner_email if not object.sudo().partner_id.email or object.sudo().partner_id.email != object.partner_email else '') }}</field>
+        <field name="partner_to">{{ object.partner_id.id if object.sudo().partner_id.email and object.sudo().partner_id.email == object.partner_email else '' }}</field>
+        <field name="description">Set this template on a project's stage to automate email when tasks reach stages</field>
+        <field name="body_html" type="html">
+            <div>
+                Dear <t t-out="object.sudo().partner_id.name or 'Madam/Sir'">Madam/Sir</t>,<br /><br />
+                The reference of your reservation is <t t-out="object.id or ''">15</t>.<br />
+                To confirme your reservation : <br />
+                <div style="text-align: center; padding: 16px 0px 16px 0px;">
+                    <a style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;" t-attf-href="/chriamrelax/reservation/{{ object.id }}/{{ object.access_token }}" target="_blank">Click here</a><br/>
+                </div>
+            </div>
+        </field>
+        <!--<field name="lang">{{ partner_id.lang }}</field>-->
+        <field name="auto_delete" eval="False"/>   
+    </record>
+
+   </data>
+</odoo>

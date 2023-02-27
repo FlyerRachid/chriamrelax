@@ -1,0 +1,488 @@
+<odoo>
+    <data>
+       
+        <!--
+        <template id="assets_frontend_formation" inherit_id="website.assets_frontend" name="Assets Frontend Formation">
+              <xpath expr="." position="inside">
+                <script type="text/javascript" src='/school/static/src/js/createDefine.js'></script>
+              </xpath>
+        </template>
+        -->
+        
+        <template id="reservation_followup" name="Helpdesk Tickets">
+            
+            <t t-call="portal.portal_layout">
+                
+                <t t-set="wrapwrap_classes" t-value="'o_portal_bg_dark'"/>
+             
+                <div class="row mt16 o_project_portal_sidebar">
+                    <t t-call="portal.portal_record_sidebar">
+                        <t t-set="classes" t-value="'col-lg-auto d-print-none'"/>
+
+                        <t t-set="entries">
+                            <ul class="list-group list-group-flush flex-wrap flex-row flex-lg-column">
+                                <!--
+                                <li t-if="ticket.team_id.allow_portal_ticket_closing and not ticket.stage_id.fold and not ticket.closed_by_partner" class="list-group-item flex-grow-1">
+                                    <div class="d-grid flex-sm-nowrap">
+                                        <button class="btn btn-secondary pt-1" data-bs-target="#helpdesk_ticket_close_modal" data-bs-toggle="modal">
+                                            Close Ticket
+                                        </button>
+                                    </div>
+
+                                    <div class="modal" tabindex="-1" role="dialog" id="helpdesk_ticket_close_modal">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Close ticket</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p>Are you sure you wish to proceed?</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <a role="button" class="btn btn-primary" t-att-href="'/my/ticket/close/%s/%s' % (ticket.id, ticket.access_token)">Close the ticket</a>
+                                                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Discard</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                -->
+                                <!--
+                                <li id="ticket-nav" class="list-group-item ps-0 flex-grow-1" t-ignore="true" role="complementary">
+                                    <ul class="nav flex-column">
+                                        <li class="nav-item" id="nav-header">
+                                            <a class="nav-link ps-3" href="#card_header" style="max-width: 200px;">
+                                                Reservation
+                                            </a>
+                                        </li>
+                                        <li class="nav-item" id="nav-chat">
+                                            <a class="nav-link ps-3" href="#ticket_chat">
+                                                History
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                -->
+                                <!--
+                                <li id="ticket-links" t-if="ticket_link_section" class="list-group-item flex-grow-1" t-ignore="true" role="complementary" invisible="1">
+                                    <ul class="nav flex-column">
+                                        <t t-foreach="sorted(ticket_link_section, key=lambda r: r['sequence'])" t-as="ticket_link">
+                                            <li class="nav-item">
+                                                <a class="nav-link ps-0" t-att-href="ticket_link['access_url']">
+                                                    <t t-out="ticket_link['title']"/>
+                                                </a>
+                                            </li>
+                                        </t>
+                                    </ul>
+                                </li>
+                                -->
+                                <li t-if="reservation.partner_id" class="list-group-item flex-grow-1">
+                                    <!--
+                                    <div class="col-12 col-md-12 pb-2" t-if="ticket.user_id">
+                                        <strong>Assigned to</strong>
+                                        <div class="d-flex ps-3 flex-nowrap">
+                                            <img class="rounded-circle mt-1 o_portal_contact_img" t-att-src="image_data_uri(ticket.user_id.avatar_1024)" alt="Contact"/>
+                                            <div class="ms-2">
+                                                <div t-out="ticket.user_id" t-options='{"widget": "contact", "fields": ["name"]}' class="mt-2"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    -->
+                                    <div class="col-12 col-md-12 pb-2" t-if="reservation.partner_id">
+                                        <strong>Customer</strong>
+                                        <div class="d-flex ps-3 flex-nowrap">
+                                            <img class="rounded-circle mt-1 o_portal_contact_img" t-att-src="image_data_uri(reservation.partner_id.avatar_1024)" alt="Contact"/>
+                                            <div class="ms-2">
+                                                <div t-field="reservation.partner_id" t-options='{"widget": "contact", "fields": ["name"]}'/>
+                                                <a t-attf-href="mailto:{{reservation.partner_id.email}}" t-if="reservation.partner_id.email"><div t-field="reservation.partner_id" t-options='{"widget": "contact", "fields": ["email"]}'/></a>
+                                                <a t-attf-href="tel:{{reservation.partner_id.phone}}" t-if="reservation.partner_id.phone"><div t-field="reservation.partner_id" t-options='{"widget": "contact", "fields": ["phone"]}'/></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </t>
+                    </t>
+                    <div id="ticket_content" class="col-12 col-lg justify-content-end">
+                        <div id="card" class="card">
+                            <div id="card_header" class="card-header container" data-anchor="true">
+                                <div class="row gs-0">
+                                    <div class="col-md">
+                                        <h5 class="row mx-1 mb-1 mb-md-0">
+                                            <div class="col-9 text-truncate">
+                                                <span t-field="reservation.name"/>
+                                                <small class="text-muted "> (#<span t-field="reservation.id"/>)</small>
+                                            </div>
+                                            <div class="col-3 text-end">
+                                                <small class="text-end">Stage:</small>
+                                                <span t-field="reservation.state" class=" badge rounded-pill text-bg-info" title="Current stage of this ticket"/>
+                                            </div>
+                                        </h5>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="card_body" class="card-body">
+                                <div class="row mb-4">
+                                    <strong class="col-lg-2">Reported on</strong>
+                                    <span class="col-lg-10" t-field="reservation.create_date" t-options='{"widget": "datetime", "hide_seconds": True}'/>
+                                </div>
+                                <!--
+                                <div class="row mb-4" t-if="ticket.team_id.portal_show_rating">
+                                    <strong class="col-lg-2">Managed by</strong>
+                                    <span class="col-lg-10">
+                                        <a t-attf-href="/helpdesk/rating/#{ticket.team_id.id}">
+                                            <span t-field="ticket.team_id.name"/>
+                                        </a>
+                                    </span>
+                                </div>
+                                <div t-if="not is_html_empty(ticket.description)" class="row mb-4" name="description">
+                                    <div class="col-lg-12" t-field="ticket.description"/>
+                                </div>
+                                -->
+                            </div>
+                        </div>
+                        
+                        <div class="o_portal_messages_container mt32" id="ticket_chat" data-anchor="true">
+                            <h4><strong>Message and communication history</strong></h4>
+                            <t t-call="portal.message_thread">
+                                <t t-set="token" t-value="reservation.access_token"/>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            
+            </t>
+         </template>
+
+        
+
+        <template id="calendar_chriamrelax">
+          <t t-call="website.layout">
+        
+            <style>
+            #calendar {
+              max-width: 1000px;
+              margin: 40px auto;
+              padding: 0 10px;
+            }
+            .modal-title  {color:white !important; margin-left: auto !important;}
+            .modal-header {background-color:#1E79C5 !important;}
+            .modal-header{display:block; text-align:center; color: white; background:#1e7ac5; }
+            .modal-title{color: white; display: inline}
+            .card-footer{min-height: 45px !important;}
+            </style>
+            <style>
+            .iti--allow-dropdown {
+              width: 100%;
+            }
+            </style>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css"/>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>  
+            <script src="/school/static/src/js/create.js?v=17"/>
+            <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.1/index.global.min.js'></script>
+              
+            <t t-raw="calendar_js"/>
+            
+            <div class="row container-fluid" style="margin: auto !important;">
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalRequest" id="btn_modalRequest" style="display:none ;" >
+                </button> 
+
+                <!-- Modal -->
+                <div class="modal fade" id="modalRequest" tabindex="-1" data-bs-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Reservation request - Sirius</h5>
+                        <!--<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
+                      </div>
+                      <div class="modal-body">
+                          
+                          <div class="mb-3">
+                            <label for="InputName" class="form-label">Responsible name *</label>
+                            <input type="text" class="form-control" id="partner_name" />
+                          </div>
+                          
+                          <div class="mb-3">
+                            <label for="InputOrganization" class="form-label">Organization/Family *</label>
+                            <input type="text" class="form-control" id="InputOrganization" />
+                          </div>
+            
+                          <div class="mb-3">
+                            <label for="InputVAT" class="form-label">VAT number</label>
+                            <input type="text" class="form-control" id="InputVAT" />
+                          </div>
+                          
+                          <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">Email address *</label>
+                            <input type="email" class="form-control" id="partner_email" aria-describedby="emailHelp" />
+                            <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                          </div>
+                          
+                          <div class="mb-3">
+                            <label for="InputStreet" class="form-label">Street *</label>
+                            <input type="text" class="form-control" id="partner_street" />
+                          </div>
+                          
+                          <div class="mb-3">
+                            <label for="InputPostcode" class="form-label">Postcode *</label>
+                            <input type="text" class="form-control" id="partner_zip" />
+                          </div>
+                          
+                           <div class="mb-3">
+                              <label for="phone" class="form-label">Phone *</label><br/>
+                              <input class="form-control" id="phone" type="tel" name="phone" />
+                          </div>
+                          
+                          <div class="mb-3">
+                            <label class="form-label" for="country_id">Country *</label>
+                            <select class="form-select" id="partner_country" >
+                                <option value="">Country...</option>
+                                <t t-foreach="countries" t-as="c">
+                                    <option t-att-value="c.id" t-att-selected="c.id == (country and country.id or -1)">
+                                        <t t-esc="c.name" />
+                                    </option>
+                                </t>
+                            </select> 
+                          </div> 
+                      </div>
+                      <div class="modal-footer">
+                        <div class="alert alert-warning" style="width:100%;display:none;text-align : center;" id="warning_request">
+                        </div>
+                        <br/>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" onclick="sendRequest(this)">Reserve</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div id='calendar'></div>
+            </div>
+            
+             <script>
+                 //https://www.twilio.com/fr/blog/saisie-numeros-telephone-internationaux-html-javascript
+                 //https://ipinfo.io/account/home
+                 
+                 function getIp(callback) {
+                 fetch('https://ipinfo.io/json?token=ebcc738826df8a', { headers: { 'Accept': 'application/json' }})
+                   .then((resp) => resp.json())
+                   .catch(() => {
+                     return {
+                       country: 'us',
+                     };
+                   })
+                   .then((resp) => callback(resp.country));
+                }
+
+                 const phoneInputField = document.querySelector("#phone");
+                 const phoneInput = window.intlTelInput(phoneInputField, {
+                      preferredCountries: ["BE", "FR", "MA", "US"],
+                      geoIpLookup   : getIp,
+                      initialCountry:"BE",
+                      utilsScript:
+                        "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+                    });
+                 
+             </script>
+            
+          </t>
+        </template>
+        
+        <template id="listing">
+          <t t-call="website.layout">
+            <style>
+            #calendar {
+              max-width: 800px;
+              margin: 40px auto;
+              padding: 0 10px;
+            }
+            </style>
+
+            <!--<h1>ELavi Hellow : <span t-esc="partner_id.name"/></h1>-->
+            <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.1/index.global.min.js'></script>
+    <script>
+
+      document.addEventListener('DOMContentLoaded', function() {
+      
+        function mobileCheck() {
+		if (window.innerWidth >= 768 ) {
+		    return false;
+		} else {
+		    return true;
+		}
+	    };
+    
+        var calendarEl = document.getElementById('calendar');
+        
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+          themeSystem: 'bootstrap4',
+          locale : 'fr',
+          initialView: 'dayGridMonth',
+          //headerToolbar: {locale : 'fr',defaultView: 'dayGridWeek',left: 'prev,next today',center: 'title',right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'  }, 
+          /*
+          header: {
+	      left: "prev,next today",
+	      center: "title",
+	      right: "month,basicWeek,basicDay"
+	    },
+	    navLinks: true,
+	  */
+	  
+	  /****/
+	    height: "auto",
+	    aspectRatio: 2,
+
+	  /****/
+	  
+	  defaultView: mobileCheck() ? "newView" : "dayGridWeek",
+            /* Check if window resize and add the new view */
+            windowResize: function(view) {
+                if (window.innerWidth >= 768 ) {
+                    calendar.changeView('dayGridWeek');
+                    /* More code */
+                } else {
+                    calendar.changeView('responsiveView');
+                    /* More code */
+                }
+            },
+	  columnHeaderHtml: function(date) {
+	    if (date.getUTCDay() === 5) {
+	      return '<b>Friday!</b>';
+	    } else {
+	      return '<i>other day</i>';
+	    }
+	  },
+  
+          views: {
+	    dayGridMonth: { // name of view
+	       titleFormat: { year: 'numeric', month: 'short' }
+	      // other view-specific options here
+	    }
+	  },
+          
+          
+          editable: true,
+          
+          events: [
+            {
+		title: 'Barber',
+		description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras eu pellentesque nibh. In nisl nulla, convallis ac nulla eget, pellentesque pellentesque magna.',
+		start: '2023-02-01',
+		end: '2023-02-01',
+		display: 'background',
+		
+		
+		
+	   },
+	    {
+	      id: 'a',
+	      title : 'Mi-Semaine',
+	      start : '2023-02-06',
+	      end   : '2023-02-11',
+	      //display: 'background',
+	      backgroundColor:'red',
+	     
+	    }
+	    ,
+	    {
+	      title : 'Semaine',
+	      start: '2023-02-10',
+	      end: '2023-02-18',
+	      //display: 'background',
+	      backgroundColor:'green',
+	    },
+	    {
+	      title: 'Week-end',
+	      start: '2023-02-10',
+	      end: '2023-02-14',
+	      backgroundColor:'blue',
+	   },
+	   {
+	      title : 'Mi-Semaine',
+	      start: '2023-02-13',
+	      end: '2023-02-18',
+	      //display: 'background',
+	      backgroundColor:'red',
+	    },
+	   {
+	      title : 'Semaine',
+	      start : '2023-02-17',
+	      end   : '2023-02-25',
+	      //display: 'background',
+	      backgroundColor:'green'
+	    }
+	    ,
+	    {
+	      title: 'Week-end',
+	      start: '2023-02-17',
+	      end: '2023-02-21',
+	      backgroundColor:'blue',
+	   },
+	    {
+	      title : 'Mi-Semaine',
+	      start: '2023-02-20',
+	      end: '2023-02-25',
+	      //display: 'background',
+	      backgroundColor:'red',
+	    },
+	    
+	  ], 
+	  
+	  eventColor: '#378006',
+          initialDate: '2023-02-10',
+          
+          
+          eventClick: function(info) {
+                alert('hellow flyer')
+          },
+          
+           dateClick: function() {
+		    alert('a day has been clicked!');
+		  }
+		 
+        });
+        
+        
+        var event = calendar.getEventById('a') // an event object!
+        var start = event.start // a property (a Date object)
+        console.log(start.toISOString()) // "2018-09-01T00:00:00.000Z"
+        	
+        
+        calendar.render();
+        
+        
+      });
+      
+      
+      
+      
+      
+    </script>
+           
+            <div class="container">
+  <div class="row">
+    <div class="col-sm">
+       <div id='calendar'></div>
+    </div>
+    <div class="col-sm">
+      One of three columns
+    </div>
+    
+  </div>
+</div>
+          </t>
+        </template>
+
+        <template id="object">
+          <h1><t t-esc="object.display_name"/></h1>
+          <dl>
+            <t t-foreach="object._fields" t-as="field">
+              <dt><t t-esc="field"/></dt>
+              <dd><t t-esc="object[field]"/></dd>
+            </t>
+          </dl>
+        </template>
+
+    </data>
+</odoo>
