@@ -5,14 +5,12 @@ import math
 from collections import defaultdict
 from datetime import timedelta
 from itertools import repeat
-
 import pytz
 import uuid
-
 from odoo import api, Command, fields, models, tools, _
-
 from odoo.osv.expression import AND
 import re
+from odoo.osv import expression
 
 
 
@@ -425,3 +423,26 @@ class Reservation(models.Model):
         string="Residence",
         readonly=False, copy=False, index=True,
         tracking=True)
+    
+    
+    order_ids = fields.One2many('sale.order', 'reservation_id', string='Orders')
+    
+    
+    def action_view_sale_order(self):
+        self.ensure_one()
+        action = self.env["ir.actions.actions"]._for_xml_id("sale.action_orders")
+        action['context'] = {
+            'search_default_partner_id': self.partner_id.id,
+            'default_partner_id': self.partner_id.id,
+            'default_reservation_id': self.id,
+        }
+        action['domain'] = expression.AND([[('reservation_id', '=', self.id)], self._get_lead_sale_order_domain()])
+        orders = self.order_ids.filtered_domain(self._get_lead_sale_order_domain())
+        if len(orders) == 1:
+            action['views'] = [(self.env.ref('sale.view_order_form').id, 'form')]
+            action['res_id'] = orders.id
+        return action
+    
+    
+    def _get_lead_sale_order_domain(self):
+        return [('state', 'not in', ('draft', 'sent', 'cancel'))]

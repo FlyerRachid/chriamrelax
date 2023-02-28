@@ -8,11 +8,25 @@
             <form string="chriamrelax Reservation">
                 
                 <header>
+                    <button name="action_advance_invoice" string="Advance invoice"
+                            type="object" class="oe_highlight" data-hotkey="w" title="Mark as won"/>
+                    <button name="action_balance_bill" string="Balance bill"
+                            type="object" class="oe_highlight" data-hotkey="w" title="Mark as won"/>
+                    <button name="action_energy_bill" string="Energy bill"
+                            type="object" class="oe_highlight" data-hotkey="w" title="Mark as won"/>
                     <!--
                     <button name="assign_ticket_to_self" string="Assign To Me" type="object" class="oe_highlight" groups="helpdesk.group_helpdesk_user" attrs="{'invisible': [('user_id', '!=', False)]}" data-hotkey="q"/>
                    -->
                     <field name="state" widget="statusbar"
                         options="{'clickable': '1', 'fold_field': 'fold'}"/>
+                    
+                    <button class="oe_stat_button" type="object"
+                        name="action_view_sale_order" icon="fa-usd">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_text"> Orders</span>
+                        </div>
+                    </button>
+                    
                 </header>
                 
                 <sheet>
