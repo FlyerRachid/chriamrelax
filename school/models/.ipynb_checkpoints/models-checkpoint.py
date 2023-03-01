@@ -108,7 +108,7 @@ class Reservation(models.Model):
     
     def xml(self):
         import xml.etree.ElementTree as ET
-        # create the root element
+        # create the root element ====
         root = ET.Element('items')
 
         # create child elements
