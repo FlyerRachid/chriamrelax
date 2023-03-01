@@ -430,6 +430,7 @@ class Reservation(models.Model):
     
     def action_view_sale_order(self):
         self.ensure_one()
+        a = 3
         action = self.env["ir.actions.actions"]._for_xml_id("sale.action_orders")
         action['context'] = {
             'search_default_partner_id': self.partner_id.id,
