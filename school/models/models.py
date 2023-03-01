@@ -429,6 +429,13 @@ class Reservation(models.Model):
     
     order_ids = fields.One2many('sale.order', 'reservation_id', string='Orders')
     
+        
+    title = fields.Char(
+        string="title",
+        required=True, copy=False, readonly=True,
+        index='trigram',
+        state={'option': [('readonly', False)]})
+    
     
     def action_view_sale_order(self):
         self.ensure_one()
@@ -452,12 +459,12 @@ class Reservation(models.Model):
     
     def action_advance_invoice(self):
         
-        availablity = self.env['chriamrelax.price'].filtered(lambda s: s.token = self.token)
-        _logger.info("availablity = = = => %s %s",(availablity,self.token))
-        if availablity:
-           _logger.info("availablity price = = = => %s",(availablity.price))
-        return True
-    
+        availablity = self.env['chriamrelax.price'].search([('token', '=', self.token)])
+        if not availablity:
+           return False
+        
+        title = 'Advance invoice booking %s  (%s - %s)'%(self.residence,availablity.start_date,availablity.stop_date)
+        
         product_variant = self.env['product.product'].browse(self.env.ref('school.product_product_advance_50%_Sirius').id)
 
         _logger.info("product_variant = = = => %s",(product_variant))
@@ -472,18 +479,17 @@ class Reservation(models.Model):
         
         sale_order_line = self.env['sale.order.line'].create({
             'order_id': sale_order.id,
-            'name': 'Advance (50%)',
+            'name': title,
             'display_type': 'line_section',
             'sequence': 10  # Set the sequence to control the order of the sections
         })
-        
         
         sale_order_line = self.env['sale.order.line'].create({
             'order_id': sale_order.id,
             'product_id': product_variant.id,
             'name': product_variant.name,
             'product_uom_qty': 1,
-            'price_unit': product_variant.lst_price,
+            'price_unit': availablity.price * 0.5 or product_variant.lst_price,
             'tax_id': [(6, 0, [self.env['account.tax'].search([('amount', '=', 6)])[0].id])],
         })
         

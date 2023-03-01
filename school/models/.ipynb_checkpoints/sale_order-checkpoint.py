@@ -20,3 +20,9 @@ class SaleOrder(models.Model):
         string="Type",
         readonly=False, copy=False, index=True,
         tracking=3)
+    
+    title = fields.Char(
+        string="title",
+        required=True, copy=False, readonly=True,
+        index='trigram',
+        state={'option': [('readonly', False)]})
