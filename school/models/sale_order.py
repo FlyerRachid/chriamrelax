@@ -13,9 +13,9 @@ class SaleOrder(models.Model):
     
     type = fields.Selection(
         selection=[
-            ('action_advance_invoice', "action_advance_invoice"),
-            ('action_balance_bill', "action_balance_bill"),
-            ('action_energy_bill', "action_energy_bill"),
+            ('action_advance_invoice', "Advance Invoice (50%)"),
+            ('action_balance_bill', "balance_bill"),
+            ('action_energy_bill', "Energy_bill"),
         ],
         string="Type",
         readonly=False, copy=False, index=True,
