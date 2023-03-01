@@ -34,6 +34,7 @@
         'views/residence.xml',
         'views/templates.xml',
         'data/mail_template_data.xml',
+        'data/product.xml',
         'views/sale_order_views.xml',
     ],
     # only loaded in demonstration mode

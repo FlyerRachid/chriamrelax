@@ -10,3 +10,13 @@ class SaleOrder(models.Model):
     
     reservation_id = fields.Many2one(
         'chriamrelax.reservation', string='Opportunity', check_company=True)
+    
+    type = fields.Selection(
+        selection=[
+            ('action_advance_invoice', "action_advance_invoice"),
+            ('action_balance_bill', "action_balance_bill"),
+            ('action_energy_bill', "action_energy_bill"),
+        ],
+        string="Type",
+        readonly=False, copy=False, index=True,
+        tracking=3)

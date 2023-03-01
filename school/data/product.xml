@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    
+        <record id="product_product_advance_50%_Sirius" model="product.product">
+            <field name="name">Advance (50%)</field>
+            <field name="default_code">ADV001</field>
+            <field name="lst_price">100.00</field>
+            <field name="type">service</field>
+            <!--<field name="categ_id" ref="product_category_all"/>-->
+            <!--<field name="taxes_id" eval="[(6,0,[ref('account_tax_21'), ref('account_tax_0')])]"/>-->
+            <field name="barcode">1234567890</field>
+        </record>
+        
+   </data>
+</odoo>

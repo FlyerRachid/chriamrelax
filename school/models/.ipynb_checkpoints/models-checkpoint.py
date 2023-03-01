@@ -11,6 +11,8 @@ from odoo import api, Command, fields, models, tools, _
 from odoo.osv.expression import AND
 import re
 from odoo.osv import expression
+import logging
+_logger = logging.getLogger(__name__)
 
 
 
@@ -430,7 +432,6 @@ class Reservation(models.Model):
     
     def action_view_sale_order(self):
         self.ensure_one()
-        a = 3
         action = self.env["ir.actions.actions"]._for_xml_id("sale.action_orders")
         action['context'] = {
             'search_default_partner_id': self.partner_id.id,
@@ -447,3 +448,47 @@ class Reservation(models.Model):
     
     def _get_lead_sale_order_domain(self):
         return [('state', 'not in', ('draft', 'sent', 'cancel'))]
+    
+    
+    def action_advance_invoice(self):
+        
+        availablity = self.env['chriamrelax.price'].filtered(lambda s: s.token = self.token)
+        _logger.info("availablity = = = => %s %s",(availablity,self.token))
+        if availablity:
+           _logger.info("availablity price = = = => %s",(availablity.price))
+        return True
+    
+        product_variant = self.env['product.product'].browse(self.env.ref('school.product_product_advance_50%_Sirius').id)
+
+        _logger.info("product_variant = = = => %s",(product_variant))
+        _logger.info("product_tmpl_id = = = => %s",(product_variant.product_tmpl_id))
+
+        # Create a new sale order record
+        vals = {}
+        vals.update({"partner_id"      : self.partner_id.id})
+        vals.update({"reservation_id"  : self.id})
+        vals.update({"type"            : 'action_advance_invoice'})
+        sale_order = self.env['sale.order'].create(vals)
+        
+        sale_order_line = self.env['sale.order.line'].create({
+            'order_id': sale_order.id,
+            'name': 'Advance (50%)',
+            'display_type': 'line_section',
+            'sequence': 10  # Set the sequence to control the order of the sections
+        })
+        
+        
+        sale_order_line = self.env['sale.order.line'].create({
+            'order_id': sale_order.id,
+            'product_id': product_variant.id,
+            'name': product_variant.name,
+            'product_uom_qty': 1,
+            'price_unit': product_variant.lst_price,
+            'tax_id': [(6, 0, [self.env['account.tax'].search([('amount', '=', 6)])[0].id])],
+        })
+        
+        # Go to the new sale order record
+        action = self.env.ref('sale.action_orders').read()[0]
+        action['views'] = [(self.env.ref('sale.view_order_form').id, 'form')]
+        action['res_id'] = sale_order.id
+        return action
