@@ -71,7 +71,7 @@
             <field name="type">consu</field>
             <field name="default_code">ELC001</field>
             <field name="barcode">1234567891</field>
-            <field name="list_price">0.15</field>
+            <field name="list_price">0.94</field>
             <field name="standard_price">0.10</field>
             <!--
             <field name="uom_id" ref="uom.product_uom_kwh"/>
@@ -90,13 +90,46 @@
             <field name="name">Water Consumption</field>
             <field name="type">consu</field>
             <field name="default_code">WC001</field>
-            <field name="list_price">10</field>
+            <field name="list_price">7.55</field>
             <field name="standard_price">8</field>
             <!--
             <field name="uom_id" ref="uom.unit_gallon"/>
             <field name="uom_po_id" ref="uom.unit_gallon"/>
             <field name="taxes_id" eval="[(6,0,[ref('tax_21')])]"/>
             -->
+        </record>
+        
+        <!-- Gas Consumption Product -->
+        <record id="product_gas_consumption" model="product.product">
+            <field name="name">Gas Consumption</field>
+            <field name="type">consu</field>
+            <field name="default_code">GCP001</field>
+            <!--
+            <field name="categ_id" ref="product_category_rental"/>
+            <field name="uom_id" ref="uom.product_uom_kwh"/>
+            <field name="uom_po_id" ref="uom.product_uom_kwh"/>
+            -->
+            <field name="barcode">1234567899</field>
+            <field name="list_price">1.89</field>
+        </record>
+
+        <!-- Garbage Bag Settlement Consumption Product -->
+        <record id="product_garbage_bag_settlement" model="product.product">
+            <field name="name">Garbage Bag Settlement</field>
+            <field name="type">service</field>
+            <!--
+            <field name="categ_id" ref="product_category_rental"/>
+            -->
+            <field name="barcode">1234567892</field>
+            <field name="list_price">2</field>
+        </record>
+
+        <record id="product_deposit" model="product.product">
+            <field name="name">Deposit Booking</field>
+            <field name="type">service</field>
+            <field name="list_price">-500</field>
+            <!--<field name="taxes_id" eval="[(6, 0, [ref('account.tax_21')])]"/>-->
+            <field name="default_code">DEP001</field>
         </record>
         
    </data>

@@ -459,9 +459,98 @@ class Reservation(models.Model):
 
     
     def action_energy_bill(self):
-        return True
+        sale_order = self.env['sale.order'].search([('reservation_id.id', '=', self.id),('type', '=', 'action_energy_bill')])
+        if sale_order:
+           # Go to the new sale order record
+           action = self.env.ref('sale.action_orders').read()[0]
+           action['views'] = [(self.env.ref('sale.view_order_form').id, 'form')]
+           action['res_id'] = sale_order.id
+           return action
+            
+        availablity = self.env['chriamrelax.price'].search([('token', '=', self.token)])
+        if not availablity:
+           return False
+                
+        title = 'Energy booking %s  (%s - %s)'%(self.residence,availablity.start_date,availablity.stop_date)
+               
+        # Create a new sale order record
+        vals = {}
+        vals.update({"partner_id"      : self.partner_id.id})
+        vals.update({"reservation_id"  : self.id})
+        vals.update({"type"            : 'action_energy_bill'})
+        vals.update({"title"           : title})
+        sale_order = self.env['sale.order'].create(vals)
+        
+        sale_order_line = self.env['sale.order.line'].create({
+            'order_id': sale_order.id,
+            'name': title,
+            'display_type': 'line_section',
+            'sequence': 10  # Set the sequence to control the order of the sections
+        })
+            
+        product_deposit = self.env['product.product'].browse(self.env.ref('school.product_deposit').id)
+        
+        sale_order_line = self.env['sale.order.line'].create({
+            'order_id': sale_order.id,
+            'product_id': product_deposit.id,
+            'name': product_deposit.name,
+            'product_uom_qty': 1,
+            'price_unit': product_deposit.lst_price,
+        })
+        
+        product_water = self.env['product.product'].browse(self.env.ref('school.product_water_consumption').id)
+        
+        sale_order_line = self.env['sale.order.line'].create({
+            'order_id': sale_order.id,
+            'product_id': product_water.id,
+            'name': product_water.name,
+            'product_uom_qty': 1,
+            'price_unit': product_water.lst_price,
+            'tax_id': [(6, 0, [self.env['account.tax'].search([('amount', '=', 6)])[0].id])],
+        })
+        
+        product_electricity = self.env['product.product'].browse(self.env.ref('school.product_product_electricity_consumption').id)
+        
+        sale_order_line = self.env['sale.order.line'].create({
+            'order_id': sale_order.id,
+            'product_id': product_electricity.id,
+            'name': product_electricity.name,
+            'product_uom_qty': 1,
+            'price_unit': product_electricity.lst_price,
+            'tax_id': [(6, 0, [self.env['account.tax'].search([('amount', '=', 6)])[0].id])],
+        })
+
+        product_gaz = self.env['product.product'].browse(self.env.ref('school.product_gas_consumption').id)
+        
+        sale_order_line = self.env['sale.order.line'].create({
+            'order_id': sale_order.id,
+            'product_id': product_gaz.id,
+            'name': product_gaz.name,
+            'product_uom_qty': 1,
+            'price_unit': product_gaz.lst_price,
+            'tax_id': [(6, 0, [self.env['account.tax'].search([('amount', '=', 6)])[0].id])],
+        })
+        
+
+        product_garbage_bag = self.env['product.product'].browse(self.env.ref('school.product_garbage_bag_settlement').id)
+        
+        sale_order_line = self.env['sale.order.line'].create({
+            'order_id': sale_order.id,
+            'product_id': product_garbage_bag.id,
+            'name': product_garbage_bag.name,
+            'product_uom_qty': 1,
+            'price_unit': product_garbage_bag.lst_price,
+        })
+        
+        # Go to the new sale order record
+        action = self.env.ref('sale.action_orders').read()[0]
+        action['views'] = [(self.env.ref('sale.view_order_form').id, 'form')]
+        action['res_id'] = sale_order.id
+        return action
     
 
+    
+    
     def action_balance_bill(self):
         sale_order = self.env['sale.order'].search([('reservation_id.id', '=', self.id),('type', '=', 'action_balance_bill')])
         if sale_order:
@@ -477,12 +566,7 @@ class Reservation(models.Model):
         
         percent = '%'
         title = 'Balance (other 50%s) booking %s  (%s - %s)'%(percent,self.residence,availablity.start_date,availablity.stop_date)
-        
-
-        
-        product_guarantee = self.env['product.product'].browse(self.env.ref('school.product_guarantee').id)
-        _logger.info("product Guarantee  : %s | product tmpl  : %s",(product_guarantee,product_guarantee.product_tmpl_id))
-        
+                
         # Create a new sale order record
         vals = {}
         vals.update({"partner_id"      : self.partner_id.id})
