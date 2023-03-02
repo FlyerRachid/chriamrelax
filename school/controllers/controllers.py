@@ -122,7 +122,8 @@ class School(http.Controller):
             vals.update({'stop' : record.stop})
             vals.update({'residence_id': record.residence_id.id})
             vals.update({'residence': record.residence})
-            reservation = http.request.env['chriamrelax.reservation'].sudo().create(vals)
+            reservation      = http.request.env['chriamrelax.reservation'].sudo().create(vals)
+            reservation.name = 'Booking %s  (%s - %s)'%(reservation.residence,record.start_date,record.stop_date)
             reservation.action_send_email()
             
         _logger.info("reservation  ::::: %s",(reservation.access_token)) 

@@ -454,27 +454,108 @@ class Reservation(models.Model):
     
     
     def _get_lead_sale_order_domain(self):
-        return [('state', 'not in', ('draft', 'sent', 'cancel'))]
+        return [] or [('state', 'not in', ('draft', 'sent', 'cancel'))]
     
+
     
-    def action_advance_invoice(self):
-        
+    def action_energy_bill(self):
+        return True
+    
+
+    def action_balance_bill(self):
+        sale_order = self.env['sale.order'].search([('reservation_id.id', '=', self.id),('type', '=', 'action_balance_bill')])
+        if sale_order:
+           # Go to the new sale order record
+           action = self.env.ref('sale.action_orders').read()[0]
+           action['views'] = [(self.env.ref('sale.view_order_form').id, 'form')]
+           action['res_id'] = sale_order.id
+           return action
+            
         availablity = self.env['chriamrelax.price'].search([('token', '=', self.token)])
         if not availablity:
            return False
         
-        title = 'Advance invoice booking %s  (%s - %s)'%(self.residence,availablity.start_date,availablity.stop_date)
+        percent = '%'
+        title = 'Balance (other 50%s) booking %s  (%s - %s)'%(percent,self.residence,availablity.start_date,availablity.stop_date)
         
-        product_variant = self.env['product.product'].browse(self.env.ref('school.product_product_advance_50%_Sirius').id)
 
-        _logger.info("product_variant = = = => %s",(product_variant))
-        _logger.info("product_tmpl_id = = = => %s",(product_variant.product_tmpl_id))
+        
+        product_guarantee = self.env['product.product'].browse(self.env.ref('school.product_guarantee').id)
+        _logger.info("product Guarantee  : %s | product tmpl  : %s",(product_guarantee,product_guarantee.product_tmpl_id))
+        
+        # Create a new sale order record
+        vals = {}
+        vals.update({"partner_id"      : self.partner_id.id})
+        vals.update({"reservation_id"  : self.id})
+        vals.update({"type"            : 'action_balance_bill'})
+        vals.update({"title"           : title})
+        sale_order = self.env['sale.order'].create(vals)
+        
+        product_balance = self.env['product.product'].browse(self.env.ref('school.product_balance_advance').id)
+        _logger.info("product Balance  : %s | product tmpl  : %s",(product_balance,product_balance.product_tmpl_id))
+        
+        sale_order_line = self.env['sale.order.line'].create({
+            'order_id': sale_order.id,
+            'name': title,
+            'display_type': 'line_section',
+            'sequence': 10  # Set the sequence to control the order of the sections
+        })
+        
+        sale_order_line = self.env['sale.order.line'].create({
+            'order_id': sale_order.id,
+            'product_id': product_balance.id,
+            'name': product_balance.name,
+            'product_uom_qty': 1,
+            'price_unit': availablity.price * 0.5 or product_balance.lst_price,
+            'tax_id': [(6, 0, [self.env['account.tax'].search([('amount', '=', 6)])[0].id])],
+        })
+             
+        product_guarantee = self.env['product.product'].browse(self.env.ref('school.product_guarantee').id)
+        _logger.info("product Guarantee  : %s | product tmpl  : %s",(product_guarantee,product_guarantee.product_tmpl_id))
+        
+        sale_order_line = self.env['sale.order.line'].create({
+            'order_id': sale_order.id,
+            'product_id': product_guarantee.id,
+            'name': product_guarantee.name,
+            'product_uom_qty': 1,
+            'price_unit': 500,
+            'tax_id': [(6, 0, [self.env['account.tax'].search([('amount', '=', 6)])[0].id])],
+        })
+        # Go to the new sale order record
+        action = self.env.ref('sale.action_orders').read()[0]
+        action['views'] = [(self.env.ref('sale.view_order_form').id, 'form')]
+        action['res_id'] = sale_order.id
+        return action
+    
+    
+    
+    def action_advance_invoice(self):
+        
+        sale_order = self.env['sale.order'].search([('reservation_id.id', '=', self.id),('type', '=', 'action_advance_invoice')])
+        if sale_order:
+           # Go to the new sale order record
+           action = self.env.ref('sale.action_orders').read()[0]
+           action['views'] = [(self.env.ref('sale.view_order_form').id, 'form')]
+           action['res_id'] = sale_order.id
+           return action
+    
+        availablity = self.env['chriamrelax.price'].search([('token', '=', self.token)])
+        if not availablity:
+           return False
+        
+        title = 'Advance invoice (50%) %s  (%s - %s)'%(self.residence,availablity.start_date,availablity.stop_date)
+        
+        product_variant = self.env['product.product'].browse(self.env.ref('school.product_advance_50').id)
+
+        _logger.info("product variant  : %s | product tmpl  : %s",(product_variant,product_variant.product_tmpl_id))
+        _logger.info("title  %s",(title))
 
         # Create a new sale order record
         vals = {}
         vals.update({"partner_id"      : self.partner_id.id})
         vals.update({"reservation_id"  : self.id})
         vals.update({"type"            : 'action_advance_invoice'})
+        vals.update({"title"            : title})
         sale_order = self.env['sale.order'].create(vals)
         
         sale_order_line = self.env['sale.order.line'].create({

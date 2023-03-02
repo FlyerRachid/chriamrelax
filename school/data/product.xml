@@ -3,13 +3,100 @@
     <data>
     
         <record id="product_product_advance_50%_Sirius" model="product.product">
-            <field name="name">Advance (50%)</field>
+            <field name="name">Advance Payment (50%)</field>
             <field name="default_code">ADV001</field>
             <field name="lst_price">100.00</field>
             <field name="type">service</field>
             <!--<field name="categ_id" ref="product_category_all"/>-->
             <!--<field name="taxes_id" eval="[(6,0,[ref('account_tax_21'), ref('account_tax_0')])]"/>-->
             <field name="barcode">1234567890</field>
+        </record>
+        
+        <record id="product_advance_50%" model="product.product">
+            <field name="name">Advance Payment (50%)</field>
+            <field name="default_code">ADV002</field>
+            <field name="lst_price">100.00</field>
+            <field name="type">service</field>
+            <!--<field name="categ_id" ref="product_category_all"/>-->
+            <!--<field name="taxes_id" eval="[(6,0,[ref('account_tax_21'), ref('account_tax_0')])]"/>-->
+            <!--<field name="barcode">1234567890</field>-->
+        </record>
+        
+        <record id="product_guarantee" model="product.product">
+            <field name="name">Guarantee Payment</field>
+            <field name="default_code">GPV002</field>
+            <field name="type">service</field>
+            <field name="list_price">500.0</field>
+            <field name="standard_price">0.0</field>
+            <!--
+            <field name="categ_id" ref="product_category_booking"/>
+            <field name="taxes_id" eval="[(6, 0, [ref('tax_10_percent')])]"/>
+            -->
+        </record>
+        
+        <record id="product_balance_advance" model="product.product" >
+            <field name="name">Balance Advance (other 50%) </field>
+            <field name="default_code">BAV002</field>
+            <field name="list_price">0.0</field>
+            <field name="type">service</field>
+            <!--
+            <field name="taxes_id" eval="[(6,0,[ref('tax_20')])]"/>
+            <field name="description">Balance of the advance payment for reservation booking</field>
+            -->
+            <field name="description">Balance of the advance payment for reservation booking</field>
+        </record>
+        
+        
+        <!-- Here's an example of UoM category for electricity in a demo XML file in Odoo: -->
+        <!--
+        <record id="product_uom_category_electricity" model="uom.category">
+            <field name="name">Electricity</field>
+        </record>
+        -->
+        <!-- Define the unit of measure for kilowatt-hour (kWh) -->
+        <!--
+        <record id="uom.product_uom_kwh" model="uom.uom">
+            <field name="name">kWh</field>
+            <field name="category_id" ref="product_uom_category.electricity"/>
+            <field name="uom_type">reference</field>
+            <field name="rounding" eval="0.00001"/>
+            <field name="factor_inv" eval="1"/>
+            <field name="factor" eval="1"/>
+        </record>
+        -->
+        
+        <!-- Electricity Consumption Product -->
+        <record id="product_product_electricity_consumption" model="product.product">
+            <field name="name">Electricity Consumption</field>
+            <field name="type">consu</field>
+            <field name="default_code">ELC001</field>
+            <field name="barcode">1234567891</field>
+            <field name="list_price">0.15</field>
+            <field name="standard_price">0.10</field>
+            <!--
+            <field name="uom_id" ref="uom.product_uom_kwh"/>
+            <field name="uom_po_id" ref="uom.product_uom_kwh"/>
+            <field name="description">Electricity Consumption Product</field>
+            <field name="invoice_policy">order</field>
+            <field name="sale_ok" eval="False"/>
+            <field name="purchase_ok" eval="False"/>
+            <field name="available_in_pos" eval="False"/>
+            <field name="active" eval="True"/>
+            -->
+        </record>
+        
+        <!-- Water Consumption Product -->
+        <record id="product_water_consumption" model="product.product">
+            <field name="name">Water Consumption</field>
+            <field name="type">consu</field>
+            <field name="default_code">WC001</field>
+            <field name="list_price">10</field>
+            <field name="standard_price">8</field>
+            <!--
+            <field name="uom_id" ref="uom.unit_gallon"/>
+            <field name="uom_po_id" ref="uom.unit_gallon"/>
+            <field name="taxes_id" eval="[(6,0,[ref('tax_21')])]"/>
+            -->
         </record>
         
    </data>
