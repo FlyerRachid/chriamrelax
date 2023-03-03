@@ -159,7 +159,78 @@
 
         <template id="calendar_chriamrelax">
           <t t-call="website.layout">
-        
+             <style>
+                 .mt-100 {
+    margin-top: 100px
+}
+
+
+.card {
+    border-radius: 3vh;
+    margin: auto;
+    max-width: 380px;
+    padding: 7vh 6vh;
+    align-items: center;
+    box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.19)
+}
+
+@media(max-width:767px) {
+    .card {
+        width: 90vw
+    }
+}
+
+.card-img {
+    padding: 20px 0;
+    width: 40%
+}
+
+.card-img img {
+    opacity: 0.7
+}
+
+.card-title {
+    margin-bottom: unset
+}
+
+.card-title p {
+    color: rgb(29, 226, 226);
+    font-weight: 900;
+    font-size: 30px;
+    margin-bottom: unset
+}
+
+.card-text p {
+    color: grey;
+    font-size: 25px;
+    text-align: center;
+    padding: 3vh 0;
+    font-weight: lighter
+}
+
+.btn {
+    width: 100%;
+    background-color: rgb(29, 226, 226);
+    border-color: rgb(29, 226, 226);
+    border-radius: 25px;
+    color: white;
+    font-size: 20px
+}
+
+.btn:focus {
+    box-shadow: none;
+    outline: none;
+    box-shadow: none;
+    color: white;
+    -webkit-box-shadow: none;
+    -webkit-user-select: none;
+    transition: none
+}
+
+.btn:hover {
+    color: white
+}</style>
+              
             <style>
             #calendar {
               max-width: 1000px;
@@ -179,10 +250,37 @@
             </style>
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css"/>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>  
-            <script src="/school/static/src/js/create.js?v=17"/>
+            <script src="/school/static/src/js/create.js?v=18"/>
             <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.1/index.global.min.js'></script>
+             
+            <!-- 03-03-2023 -->  
+            <script type='text/javascript' src='https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js'></script>
+            <script type='text/javascript' src='https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js'></script>
+            <!-- 03-03-2023 -->
               
             <t t-raw="calendar_js"/>
+              
+            <!-- 03-03-2023 -->
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal" id="btn_modalSuccess" style="display:none ;">
+            </button>
+            <div class="modal fade" id="myModal" role="dialog">
+                <div class="modal-dialog">
+                    <div class="card">
+                        <div class="card-img"> <img class="img-fluid" src="https://i.imgur.com/d0Jfn62.png"/> </div>
+                        <div class="card-title">
+                            <p>Success!</p>
+                        </div>
+                        <div class="card-text">
+                              <strong>Votre réservation a été confirmée avec succès !</strong><br/><br/>
+                              <span>Votre numéro de réservation est : <strong>[R00427]</strong>.</span><br/><br/>
+                              <span>Nous avons envoyé un email de confirmation de réservation à l'adresse : <strong>francoise@lambert-marquage.be</strong>.</span><br/> <br/><span>Si vous ne recevez pas l'email dans les prochaines minutes, veuillez vérifier votre dossier de courrier indésirable ou contactez-nous par <b>info@chriamrelax.com</b>.</span>
+                        </div> 
+                        <br/>
+                        <button class="btn">Close</button>
+                    </div>
+                </div>
+            </div>
+            <!--  03-03-2023  -->
             
             <div class="row container-fluid" style="margin: auto !important;">
                 <!-- Button trigger modal -->
@@ -251,7 +349,7 @@
                         <div class="alert alert-warning" style="width:100%;display:none;text-align : center;" id="warning_request">
                         </div>
                         <br/>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btn_modalRequestClose">Close</button>
                         <button type="button" class="btn btn-primary" onclick="sendRequest(this)">Reserve</button>
                       </div>
                     </div>

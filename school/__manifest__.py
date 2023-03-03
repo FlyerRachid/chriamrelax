@@ -35,6 +35,7 @@
         'views/templates.xml',
         'data/mail_template_data.xml',
         'data/product.xml',
+        'data/ir_sequence_data.xml',
         'views/sale_order_views.xml',
     ],
     # only loaded in demonstration mode

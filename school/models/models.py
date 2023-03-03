@@ -100,7 +100,7 @@ class Price(models.Model):
     
 class Reservation(models.Model):
     _name = 'chriamrelax.reservation'
-    _description = 'chriamrelax.reservation'
+    _description = 'Reservation'
     _order = 'date_order desc, id desc'
     _inherit = ['portal.mixin', 'mail.thread.cc', 'utm.mixin', 'rating.mixin', 'mail.activity.mixin']
     
@@ -198,6 +198,13 @@ class Reservation(models.Model):
                 vals['partner_id'] = self.env['res.partner'].find_or_create(
                     tools.formataddr((parsed_name, parsed_email))
                 ).id
+            
+            seq_date = fields.Datetime.context_timestamp(
+                    self, fields.Datetime.to_datetime(vals['date_order'])
+                ) if 'date_order' in vals else None
+            vals['name'] = self.env['ir.sequence'].next_by_code('chriamrelax.reservation', sequence_date=seq_date)
+            _logger.info("======================================================>",(seq_date))
+
         # context: no_log, because subtype already handle this
         reservations = super(Reservation, self).create(list_value)
 
@@ -207,6 +214,10 @@ class Reservation(models.Model):
                 rec.message_subscribe(partner_ids=rec.partner_id.ids)
             rec._portal_ensure_token()
         return reservations
+    
+    
+    
+    
 
 
 
@@ -359,9 +370,8 @@ class Reservation(models.Model):
     name = fields.Char(
         string="Reservation Reference",
         required=False, copy=False, readonly=False,
-        index='trigram',
-        default=lambda self: _('New'))
-
+        index='trigram')
+    
     company_id = fields.Many2one(
         comodel_name='res.company',
         required=True, index=True,
@@ -457,6 +467,7 @@ class Reservation(models.Model):
         return [] or [('state', 'not in', ('draft', 'sent', 'cancel'))]
     
 
+    #=== ACTION METHODS ===#
     
     def action_energy_bill(self):
         sale_order = self.env['sale.order'].search([('reservation_id.id', '=', self.id),('type', '=', 'action_energy_bill')])
@@ -627,9 +638,9 @@ class Reservation(models.Model):
         if not availablity:
            return False
         
-        title = 'Advance invoice (50%) %s  (%s - %s)'%(self.residence,availablity.start_date,availablity.stop_date)
+        title = 'Advance invoice (50) %s  (%s - %s)'%(self.residence,availablity.start_date,availablity.stop_date)
         
-        product_variant = self.env['product.product'].browse(self.env.ref('school.product_advance_50').id)
+        product_variant = self.env['product.product'].browse(self.env.ref('school.product_advance_50%').id)
 
         _logger.info("product variant  : %s | product tmpl  : %s",(product_variant,product_variant.product_tmpl_id))
         _logger.info("title  %s",(title))

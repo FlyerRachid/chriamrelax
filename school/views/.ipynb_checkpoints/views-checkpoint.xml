@@ -158,7 +158,8 @@
             <tree string="Reservation Orders" sample="1"
                 decoration-info="state == 'option'"
                 decoration-muted="state == 'cancel'">
-                <field name="name" string="Title" readonly="1" decoration-bf="1"/>
+                <field name="name" string="Number" readonly="1" decoration-bf="1"/>
+                <field name="title" string="Title" readonly="1" decoration-bf="1"/>
                 <field name="residence" string="Residence"   readonly="0" decoration-bf="1"/>
                 <field name="partner_id" string="Customer" readonly="1" decoration-bf="1"/>
                 <field name="start" string="Start Date" widget="date" optional="show"/>
