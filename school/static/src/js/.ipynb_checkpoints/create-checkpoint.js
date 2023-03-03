@@ -71,6 +71,8 @@ function sendRequest(info) {
                document.getElementById('warning_request').innerHTML     = json.html 
            }else if(json.error == false){
                console.log('ERROR : ',json.error);
+               document.getElementById('btn_modalRequestClose').click();
+               document.getElementById('btn_modalSuccess').click();
                   
              }
                 

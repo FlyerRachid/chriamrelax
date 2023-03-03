@@ -17,6 +17,9 @@
             <xpath expr="//group[@name='technical']" position="inside">
                 <field name="reservation_id" help="Log in the chatter from which opportunity the order originates" groups="base.group_no_one"/>
             </xpath>
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="title" string="Title"/>
+            </xpath>
         </field>
     </record>
 
