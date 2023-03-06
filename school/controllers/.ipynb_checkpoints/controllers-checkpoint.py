@@ -151,6 +151,12 @@ class School(http.Controller):
 		        'Week-end'     : 'green',
                 'Mi-Semaine'   : 'red',
 	    }
+        
+        state_SELECTION = {
+                'reserved'      : 'true',
+		        'option'        : 'true',
+                'open'          : 'false',
+	    }
 
         domain = []
         domain.append(('residence_id.name','=',residence_name.title()))
@@ -158,6 +164,17 @@ class School(http.Controller):
         
         events = [] 
         for rec in availablity_ids :
+            """
+            domain = []
+            domain.append(('token','=',rec.token))
+            reservation_ids = request.env['chriamrelax.reservation'].sudo().search(domain)
+            _logger.info("reservation_ids =================================> %s",(reservation_ids))
+            state = state_SELECTION[reservation_id.state] if reservation_id else false
+            _logger.info("state =================================> %s",(state))
+            """
+            state = state_SELECTION[rec.state]
+            _logger.info("state =================================> %s",(rec.state,state_SELECTION[rec.state]))
+            
             data = {}
             data.update({"system_id" : rec.id})
             data.update({"residence_name" : rec.residence_id.name})
@@ -174,6 +191,8 @@ class School(http.Controller):
             events.append(data)
         
         calendar_js = "<script> var calendarEl = null;  document.addEventListener('DOMContentLoaded', function() {  calendarEl = document.getElementById('calendar'); var calendar = new FullCalendar.Calendar(calendarEl, {themeSystem: 'bootstrap4',locale : 'fr',initialView: 'dayGridMonth',header: {left: 'prev,next today',center: 'title',right: 'month,basicWeek,basicDay'},navLinks: true,height: 'auto',aspectRatio: 2,events: "+str(events)+",eventClick: function(info) {open_modalRequest(info)},}); calendar.render();}); </script>"
+        
+        calendar_js = "<script> var calendarEl = null;  document.addEventListener('DOMContentLoaded', function() {  calendarEl = document.getElementById('calendar'); var calendar = new FullCalendar.Calendar(calendarEl, {themeSystem: 'bootstrap4',locale : 'fr',initialView: 'dayGridMonth',header: {left: 'prev,next today',center: 'title',right: 'month,basicWeek,basicDay'},navLinks: true,height: 'auto',aspectRatio: 2,events: "+str(events)+",eventClick: function(info) {open_modalRequest(info)}, eventDidMount: function(info) {},}); calendar.render();}); </script>"
         
         vals.update({"calendar_js"      : calendar_js})
         vals.update({"availablity_ids"  : availablity_ids})

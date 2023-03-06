@@ -95,6 +95,18 @@ class Price(models.Model):
     
     name = fields.Char('Name', required=True)
     token = fields.Char('token', default=_default_access_token)
+    
+    state = fields.Selection(
+        selection=[
+            ('reserved', "Reserved"),
+            ('option', "option"),
+            ('open', "open"),
+        ],
+        string="Status",
+        readonly=False, copy=False, index=True,
+        tracking=3,
+        default='open')
+    
 
     
     
@@ -350,6 +362,8 @@ class Reservation(models.Model):
                 rec.partner_country_id = rec.partner_id.country_id.id
     
     
+    
+    
     partner_id     = fields.Many2one('res.partner', string='Customer', tracking=True)
     partner_name   = fields.Char(string='Customer Name', compute='_compute_partner_name', store=True, readonly=False)
     partner_email  = fields.Char(string='Customer Email', compute='_compute_partner_email', inverse="_inverse_partner_email", store=True, readonly=False)
@@ -378,6 +392,22 @@ class Reservation(models.Model):
         default=lambda self: self.env.company)
     
 
+    @api.onchange('state')
+    def onchange_state_reservation(self):
+        for rec in self:
+            state_SELECTION = {
+                'reserved'  : 'reserved',
+		        'option'    : 'option',
+                'cancel'    : 'open',
+	         }
+            domain = []
+            domain.append(('token','=',rec.token))
+            availablity_ids = self.env['chriamrelax.price'].sudo().search(domain,limit=1)
+            if (availablity_ids):
+                for record in availablity_ids:
+                    record.state = state_SELECTION[rec.state]
+                
+            
     
     state = fields.Selection(
         selection=[
