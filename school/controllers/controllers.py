@@ -188,11 +188,17 @@ class School(http.Controller):
             country_code = request.geoip.get('country_code')
             data.update({"country_code" :  country_code})
             data.update({"token"        :  rec.token})
+            data.update({"state"        :  rec.state})
             events.append(data)
         
         calendar_js = "<script> var calendarEl = null;  document.addEventListener('DOMContentLoaded', function() {  calendarEl = document.getElementById('calendar'); var calendar = new FullCalendar.Calendar(calendarEl, {themeSystem: 'bootstrap4',locale : 'fr',initialView: 'dayGridMonth',header: {left: 'prev,next today',center: 'title',right: 'month,basicWeek,basicDay'},navLinks: true,height: 'auto',aspectRatio: 2,events: "+str(events)+",eventClick: function(info) {open_modalRequest(info)},}); calendar.render();}); </script>"
         
-        calendar_js = "<script> var calendarEl = null;  document.addEventListener('DOMContentLoaded', function() {  calendarEl = document.getElementById('calendar'); var calendar = new FullCalendar.Calendar(calendarEl, {themeSystem: 'bootstrap4',locale : 'fr',initialView: 'dayGridMonth',header: {left: 'prev,next today',center: 'title',right: 'month,basicWeek,basicDay'},navLinks: true,height: 'auto',aspectRatio: 2,events: "+str(events)+",eventClick: function(info) {open_modalRequest(info)}, eventDidMount: function(info) {},}); calendar.render();}); </script>"
+        calendar_js = "<script> var calendarEl = null;  document.addEventListener('DOMContentLoaded', function() {  calendarEl = document.getElementById('calendar'); var calendar = new FullCalendar.Calendar(calendarEl, {themeSystem: 'bootstrap4',locale : 'fr',initialView: 'dayGridMonth',header: {left: 'prev,next today',center: 'title',right: 'month,basicWeek,basicDay'},navLinks: true,height: 'auto',aspectRatio: 2,events: "+str(events)+",eventClick: function(info) {open_modalRequest(info)}, eventDidMount: function(info) {if (info.event.extendedProps.state){var html = info.el.getElementsByClassName('fc-event-title');html[0].classList.add('completed-event');html[0].innerHTML = '<strong>'+info.event.title+'</strong><br/><strong>Prix : 1 288,00 €</strong><br/><strong>Occupée</strong>';}},}); calendar.render();}); </script>"
+        
+        #if (info.event.extendedProps.state){var html = info.el.getElementsByClassName('fc-event-title');html[0].classList.add('completed-event');html[0].innerHTML = <strong>info.event.title</strong><br/><strong>info.event.extendedProps.price €</strong><br/><strong>Reserved</strong>}
+        #"var html = info.el.getElementsByClassName('fc-event-title');html[0].classList.add('completed-event');html[0].innerHTML = <strong>"+info.event.title+"</strong><br/><strong>"+info.event.price+" €</strong><br/><strong>Reserved</strong>"
+        #html[0].innerHTML = '<strong>'+info.event.title+'</strong><br/><strong>Prix : 1 288,00 €</strong><br/><strong>Occupée</strong>'
+        
         
         vals.update({"calendar_js"      : calendar_js})
         vals.update({"availablity_ids"  : availablity_ids})
