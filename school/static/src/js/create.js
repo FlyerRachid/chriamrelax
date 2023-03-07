@@ -30,7 +30,7 @@ function open_modalRequest(info) {
 
 function sendRequest(info) {
     
-      alert("Sending request ....",data[0]);
+      //alert("Sending request ....",data[0]);
       
       var formData = new FormData();
       var http     = new XMLHttpRequest();
@@ -73,6 +73,7 @@ function sendRequest(info) {
                console.log('ERROR : ',json.error);
                document.getElementById('btn_modalRequestClose').click();
                document.getElementById('btn_modalSuccess').click();
+               document.getElementById('success').innerHTML = json.success 
                   
              }
                 

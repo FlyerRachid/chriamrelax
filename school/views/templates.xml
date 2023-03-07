@@ -247,10 +247,56 @@
             .iti--allow-dropdown {
               width: 100%;
             }
+                
+                .completed-event {
+		  text-decoration: line-through;
+		}
             </style>
+            <style>
+                .fc-scrollgrid  {
+                      background-image: url('https://chriamrelax.com/sirius/images/sirius/02_l.jpg');
+                      background-size: cover; /* or contain */
+                      background-position: center center;
+                      background-repeat: no-repeat;
+                    }
+
+                .fc-daygrid-day-number {
+                    color: #000;
+                  }
+
+                .fc-daygrid-day-top::before {
+                      content: attr(data-number);
+                      display: block;
+                      width: 30px;
+                      height: 30px;
+                      border-radius: 50%;
+                      line-height: 30px;
+                      text-align: center;
+                      background-color: #ccc;
+                      margin-left: -27px;
+                    }
+
+                .fc-event {
+                  background-image: url('https://res.cloudinary.com/practicaldev/image/fetch/s--BuPz-p40--/c_imagga_scale,f_auto,fl_progressive,h_420,q_auto,w_1000/https://dev-to-uploads.s3.amazonaws.com/uploads/articles/nphrgz8yfnjylrwfr0yl.png');
+                  background-size: cover; 
+                  background-position: center center;
+                  background-repeat: no-repeat;
+                }
+
+                .to-book-class {
+                  font-size: 140%;
+                  color: red;
+                }
+
+                .to-reserved-class {
+                  font-size: 140%;
+                  color: green;
+                }
+                  
+              </style>
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css"/>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>  
-            <script src="/school/static/src/js/create.js?v=18"/>
+            <script src="/school/static/src/js/create.js?v=19"/>
             <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.1/index.global.min.js'></script>
              
             <!-- 03-03-2023 -->  
@@ -266,11 +312,11 @@
             <div class="modal fade" id="myModal" role="dialog">
                 <div class="modal-dialog">
                     <div class="card">
-                        <div class="card-img"> <img class="img-fluid" src="https://i.imgur.com/d0Jfn62.png"/> </div>
+                        <div class="card-img"> <img class="img-fluid" src="https://chriamrelax.com/sirius/images/chriamrelax.gif"/> </div>
                         <div class="card-title">
                             <p>Success!</p>
                         </div>
-                        <div class="card-text">
+                        <div class="card-text" id="success">
                               <strong>Votre réservation a été confirmée avec succès !</strong><br/><br/>
                               <span>Votre numéro de réservation est : <strong>[R00427]</strong>.</span><br/><br/>
                               <span>Nous avons envoyé un email de confirmation de réservation à l'adresse : <strong>francoise@lambert-marquage.be</strong>.</span><br/> <br/><span>Si vous ne recevez pas l'email dans les prochaines minutes, veuillez vérifier votre dossier de courrier indésirable ou contactez-nous par <b>info@chriamrelax.com</b>.</span>

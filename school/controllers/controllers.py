@@ -109,7 +109,8 @@ class School(http.Controller):
         domaine.append(('token','=',kw.get('token')))
         record = request.env['chriamrelax.price'].sudo().search(domaine)
         if len(record) == 1:
-            data['error'] = False
+            record.state  = 'option'
+            data['error'] =  False
             vals = {}
             vals.update({'partner_name'  : name})
             vals.update({'partner_email' : email})
@@ -126,7 +127,9 @@ class School(http.Controller):
             reservation.title = 'Booking %s  (%s - %s)'%(reservation.residence,record.start_date,record.stop_date)
             reservation.action_send_email()
             
-        _logger.info("reservation  ::::: %s",(reservation.access_token)) 
+            data['success'] = "<strong>Your booking request has been successfully recorded!</strong><br/><br/><span>Your reservation number is: <strong>"+reservation.name+"</strong>.</span><br/><br/><span>We have sent a confirmation email to the following address: <strong>"+reservation.partner_id.email+"</strong>.</span><br/><br/><span>If you do not receive the email in the next few minutes, please check your spam folder or contact us at <b>"+reservation.company_id.email+"</b>.</span>"
+            
+        _logger.info("reservation : %s",(reservation.access_token)) 
         
         return json.dumps(data)
 
@@ -151,6 +154,18 @@ class School(http.Controller):
 		        'Week-end'     : 'green',
                 'Mi-Semaine'   : 'red',
 	    }
+        
+        state_SELECTION = {
+                'reserved'      : 'true',
+		        'option'        : 'true',
+                'open'          : 'false',
+	    }
+        
+        state_display_SELECTION = {
+                'reserved'      : 'Reserved',
+		        'option'        : 'Taken',
+                'open'          : 'To book',
+	    }
 
         domain = []
         domain.append(('residence_id.name','=',residence_name.title()))
@@ -158,23 +173,38 @@ class School(http.Controller):
         
         events = [] 
         for rec in availablity_ids :
+            """
+            domain = []
+            domain.append(('token','=',rec.token))
+            reservation_ids = request.env['chriamrelax.reservation'].sudo().search(domain)
+            state = state_SELECTION[reservation_id.state] if reservation_id else false
+            """
+            state = state_SELECTION[rec.state]
+            _logger.info("state  : %s",(rec.state,state_SELECTION[rec.state],state_display_SELECTION[rec.state]))
+            
             data = {}
             data.update({"system_id" : rec.id})
             data.update({"residence_name" : rec.residence_id.name})
-            data.update({"residence_id"   : rec.residence_id.id})
-            data.update({"price"     : rec.price})
-            data.update({"id"        : rec.id})
-            data.update({"title"     : rec.name})
-            data.update({"start"     : str(rec.start_date)})
-            data.update({"end"       : str(rec.stop_date + timedelta(days=1))})   
+            data.update({"residence_id"  : rec.residence_id.id})
+            data.update({"price"         : rec.price})
+            data.update({"id"            : rec.id})
+            data.update({"title"         : rec.name})
+            data.update({"start"         : str(rec.start_date)})
+            data.update({"end"           : str(rec.stop_date + timedelta(days=1))})   
             data.update({"backgroundColor" :  backgroundColor_SELECTION[rec.name]})   
             country_code = request.geoip.get('country_code')
-            data.update({"country_code" :  country_code})
-            data.update({"token"        :  rec.token})
+            data.update({"country_code"  :  country_code})
+            data.update({"token"         :  rec.token})
+            data.update({"state"         :  state_SELECTION[rec.state]})
+            data.update({"state_display" :  state_display_SELECTION[rec.state]})
             events.append(data)
         
         calendar_js = "<script> var calendarEl = null;  document.addEventListener('DOMContentLoaded', function() {  calendarEl = document.getElementById('calendar'); var calendar = new FullCalendar.Calendar(calendarEl, {themeSystem: 'bootstrap4',locale : 'fr',initialView: 'dayGridMonth',header: {left: 'prev,next today',center: 'title',right: 'month,basicWeek,basicDay'},navLinks: true,height: 'auto',aspectRatio: 2,events: "+str(events)+",eventClick: function(info) {open_modalRequest(info)},}); calendar.render();}); </script>"
         
+        calendar_js = "<script> var calendarEl = null;  document.addEventListener('DOMContentLoaded', function() {  calendarEl = document.getElementById('calendar'); var calendar = new FullCalendar.Calendar(calendarEl, {themeSystem: 'bootstrap4',locale : 'fr',initialView: 'dayGridMonth',header: {left: 'prev,next today',center: 'title',right: 'month,basicWeek,basicDay'},navLinks: true,height: 'auto',aspectRatio: 2,events: "+str(events)+",eventClick: function(info) {open_modalRequest(info)}, eventDidMount: function(info) {info.el.style.borderRadius = '5%';if (info.event.extendedProps.state){var html = info.el.getElementsByClassName('fc-event-title');html[0].classList.add('completed-event');html[0].innerHTML = '<strong>'+info.event.title+'</strong><br/><strong>Prix : '+info.event.extendedProps.price+' €</strong><br/><strong>'+info.event.extendedProps.state_display+'</strong>';}},}); calendar.render();}); </script>"
+        
+        calendar_js = "<script> var calendarEl = null;  document.addEventListener('DOMContentLoaded', function() {  calendarEl = document.getElementById('calendar'); var calendar = new FullCalendar.Calendar(calendarEl, {themeSystem: 'bootstrap4',locale : 'fr',initialView: 'dayGridMonth',header: {left: 'prev,next today',center: 'title',right: 'month,basicWeek,basicDay'},navLinks: true,height: 'auto',aspectRatio: 2,events: "+str(events)+",eventClick: function(info) {if (info.event.extendedProps.state == 'false'){open_modalRequest(info)}else{alert('');}}, eventDidMount: function(info) {info.el.style.borderRadius = '5%';if (info.event.extendedProps.state == 'true'){var html = info.el.getElementsByClassName('fc-event-title');html[0].classList.add('completed-event');html[0].innerHTML = '<strong>'+info.event.title+'</strong><br/><strong>Prix : '+info.event.extendedProps.price+' €</strong><br/><strong class="+'to-reserved-class'+">'+info.event.extendedProps.state_display+'</strong>';}else{var html = info.el.getElementsByClassName('fc-event-title');html[0].innerHTML = '<strong>'+info.event.title+'</strong><br/><strong>Prix : '+info.event.extendedProps.price+' €</strong><br/><strong class="+'to-book-class'+">'+info.event.extendedProps.state_display+'</strong>';}},}); calendar.render();}); </script>"
+          
         vals.update({"calendar_js"      : calendar_js})
         vals.update({"availablity_ids"  : availablity_ids})
         
