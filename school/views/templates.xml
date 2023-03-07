@@ -252,6 +252,37 @@
 		  text-decoration: line-through;
 		}
             </style>
+              <style>
+                .fc-scrollgrid  {
+                      background-image: url('https://chriamrelax.com/sirius/images/sirius/02_l.jpg');
+                      background-size: cover; /* or contain */
+                      background-position: center center;
+                      background-repeat: no-repeat;
+                    }
+
+                .fc-daygrid-day-number {
+                    color: #000;
+                  }
+
+                .fc-daygrid-day-top::before {
+                      content: attr(data-number);
+                      display: block;
+                      width: 30px;
+                      height: 30px;
+                      border-radius: 50%;
+                      line-height: 30px;
+                      text-align: center;
+                      background-color: #ccc;
+                      margin-left: -27px;
+                    }
+                  
+               .fc-event {
+                  background-image: url('https://res.cloudinary.com/practicaldev/image/fetch/s--BuPz-p40--/c_imagga_scale,f_auto,fl_progressive,h_420,q_auto,w_1000/https://dev-to-uploads.s3.amazonaws.com/uploads/articles/nphrgz8yfnjylrwfr0yl.png');
+                  background-size: cover; 
+                  background-position: center center;
+                  background-repeat: no-repeat;
+                }
+              </style>
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css"/>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>  
             <script src="/school/static/src/js/create.js?v=18"/>
