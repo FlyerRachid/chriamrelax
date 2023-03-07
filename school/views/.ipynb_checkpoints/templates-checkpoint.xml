@@ -252,7 +252,7 @@
 		  text-decoration: line-through;
 		}
             </style>
-              <style>
+            <style>
                 .fc-scrollgrid  {
                       background-image: url('https://chriamrelax.com/sirius/images/sirius/02_l.jpg');
                       background-size: cover; /* or contain */
@@ -275,13 +275,24 @@
                       background-color: #ccc;
                       margin-left: -27px;
                     }
-                  
-               .fc-event {
+
+                .fc-event {
                   background-image: url('https://res.cloudinary.com/practicaldev/image/fetch/s--BuPz-p40--/c_imagga_scale,f_auto,fl_progressive,h_420,q_auto,w_1000/https://dev-to-uploads.s3.amazonaws.com/uploads/articles/nphrgz8yfnjylrwfr0yl.png');
                   background-size: cover; 
                   background-position: center center;
                   background-repeat: no-repeat;
                 }
+
+                .to-book-class {
+                  font-size: 140%;
+                  color: red;
+                }
+
+                .to-reserved-class {
+                  font-size: 140%;
+                  color: green;
+                }
+                  
               </style>
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css"/>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>  

@@ -12,6 +12,7 @@ from odoo.osv.expression import AND
 import re
 from odoo.osv import expression
 import logging
+from odoo.exceptions import UserError
 _logger = logging.getLogger(__name__)
 
 
@@ -192,6 +193,12 @@ class Reservation(models.Model):
                 force_send = not(self.env.context.get('import_file', False))
                 template.send_mail(self.id, force_send=force_send, raise_exception=True, email_values=email_values)
         
+
+    def unlink(self):
+        for record in self:
+            if record.state != 'cancel':
+                raise UserError('You cannot delete reservation with the state in "Reserved or Option".')
+        return super(Reservation, self).unlink()
     
     @api.model_create_multi
     def create(self, list_value):
@@ -215,8 +222,9 @@ class Reservation(models.Model):
                     self, fields.Datetime.to_datetime(vals['date_order'])
                 ) if 'date_order' in vals else None
             vals['name'] = self.env['ir.sequence'].next_by_code('chriamrelax.reservation', sequence_date=seq_date)
-            _logger.info("======================================================>",(seq_date))
-
+            _logger.info("==>",(seq_date))
+            
+           
         # context: no_log, because subtype already handle this
         reservations = super(Reservation, self).create(list_value)
 
