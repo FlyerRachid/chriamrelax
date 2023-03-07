@@ -75,6 +75,20 @@ class School(http.Controller):
         else:
             return False
             
+    @http.route(['/summary'], type='http', auth="public", csrf=False)
+    def summary(self, **kw):
+        _logger.info("params  :::::::: %s",(kw))
+        data = {}
+        data['error'] = True
+        domaine = []
+        domaine.append(('token','=',kw.get('token')))
+        record = request.env['chriamrelax.price'].sudo().search(domaine)
+        if len(record) == 1:
+           data['error'] =  False
+           start        = record.start_date.strftime('%d %B %Y')
+           stop         = record.stop_date.strftime('%d %B %Y')
+           data['summary'] = "<strong>Periodx</strong>: From <strong>"+start+"</strong> to <strong>"+stop+"</strong> (<span>"+record.name+"</span>)<br/>Price: <strong>"+str(record.price)+"</strong> € + Fees:<br/>Cleaning will be carried out by a cleaning agency and will be charged on site. Water, gas, and electricity will be charged according to consumption. The deposit is <strong>500 €</strong>."
+        return json.dumps(data)
     
     @http.route(['/request'], type='http', auth="public", csrf=False)
     def request(self, **kw):
@@ -204,7 +218,8 @@ class School(http.Controller):
         calendar_js = "<script> var calendarEl = null;  document.addEventListener('DOMContentLoaded', function() {  calendarEl = document.getElementById('calendar'); var calendar = new FullCalendar.Calendar(calendarEl, {themeSystem: 'bootstrap4',locale : 'fr',initialView: 'dayGridMonth',header: {left: 'prev,next today',center: 'title',right: 'month,basicWeek,basicDay'},navLinks: true,height: 'auto',aspectRatio: 2,events: "+str(events)+",eventClick: function(info) {open_modalRequest(info)}, eventDidMount: function(info) {info.el.style.borderRadius = '5%';if (info.event.extendedProps.state){var html = info.el.getElementsByClassName('fc-event-title');html[0].classList.add('completed-event');html[0].innerHTML = '<strong>'+info.event.title+'</strong><br/><strong>Prix : '+info.event.extendedProps.price+' €</strong><br/><strong>'+info.event.extendedProps.state_display+'</strong>';}},}); calendar.render();}); </script>"
         
         calendar_js = "<script> var calendarEl = null;  document.addEventListener('DOMContentLoaded', function() {  calendarEl = document.getElementById('calendar'); var calendar = new FullCalendar.Calendar(calendarEl, {themeSystem: 'bootstrap4',locale : 'fr',initialView: 'dayGridMonth',header: {left: 'prev,next today',center: 'title',right: 'month,basicWeek,basicDay'},navLinks: true,height: 'auto',aspectRatio: 2,events: "+str(events)+",eventClick: function(info) {if (info.event.extendedProps.state == 'false'){open_modalRequest(info)}else{alert('');}}, eventDidMount: function(info) {info.el.style.borderRadius = '5%';if (info.event.extendedProps.state == 'true'){var html = info.el.getElementsByClassName('fc-event-title');html[0].classList.add('completed-event');html[0].innerHTML = '<strong>'+info.event.title+'</strong><br/><strong>Prix : '+info.event.extendedProps.price+' €</strong><br/><strong class="+'to-reserved-class'+">'+info.event.extendedProps.state_display+'</strong>';}else{var html = info.el.getElementsByClassName('fc-event-title');html[0].innerHTML = '<strong>'+info.event.title+'</strong><br/><strong>Prix : '+info.event.extendedProps.price+' €</strong><br/><strong class="+'to-book-class'+">'+info.event.extendedProps.state_display+'</strong>';}},}); calendar.render();}); </script>"
-          
+        
+        vals.update({"residence_name"   : residence_name.title()})
         vals.update({"calendar_js"      : calendar_js})
         vals.update({"availablity_ids"  : availablity_ids})
         

@@ -17,12 +17,49 @@ function generateToken() {
     }
 
 
-function open_modalRequest(info) {
+function open_modalRequestOld(info) {
   document.getElementById('btn_modalRequest').click();
   data = []
   var token = info.event.extendedProps.token
   data.push(token);
   console.log(data);
+ 
+}
+
+function open_modalRequest(info) {
+  data = []
+  var token = info.event.extendedProps.token
+  
+  /* Summary */
+  var formData = new FormData();
+  var http     = new XMLHttpRequest();
+    
+  formData.append('token'   ,token);
+  http.open('POST', '/summary', true);
+  http.onreadystatechange = function() {
+      if((http.status == 200) && (http.readyState == 4)) {
+
+       var json = JSON.parse(http.responseText);
+
+       if (json.error == true){
+           console.log('ERROR : ',json.error,json.html);
+       }else if(json.error == false){
+           console.log('ERROR : ',json.error);
+           document.getElementById('summary').innerHTML = json.summary 
+           data.push(token);
+           console.log(data);
+           document.getElementById('btn_modalRequest').click();
+           
+         }
+
+     }
+      else if(http.status != 200){
+
+      }
+    }
+ http.send(formData);
+ 
+     
  
 }
 

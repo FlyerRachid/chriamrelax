@@ -296,7 +296,7 @@
               </style>
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css"/>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>  
-            <script src="/school/static/src/js/create.js?v=19"/>
+            <script src="/school/static/src/js/create.js?v=20"/>
             <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.1/index.global.min.js'></script>
              
             <!-- 03-03-2023 -->  
@@ -338,10 +338,16 @@
                   <div class="modal-dialog modal-xl">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Reservation request - Sirius</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Reservation request - <span t-esc="residence_name"/></h5>
                         <!--<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
                       </div>
                       <div class="modal-body">
+                          
+                          <p id="summary">
+                              <strong>Period</strong>: From <strong>March 13th, 2023</strong> to <strong>March 17th, 2023</strong> (<span>Midweek</span>)<br/>
+Price: <strong>670.00</strong> € + Fees:<br/>
+Cleaning will be carried out by a cleaning agency and will be charged on site. Water, gas, and electricity will be charged according to consumption. The deposit is <strong>500 €</strong>.
+                          </p>
                           
                           <div class="mb-3">
                             <label for="InputName" class="form-label">Responsible name *</label>
