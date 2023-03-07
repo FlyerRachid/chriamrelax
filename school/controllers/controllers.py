@@ -127,7 +127,9 @@ class School(http.Controller):
             reservation.title = 'Booking %s  (%s - %s)'%(reservation.residence,record.start_date,record.stop_date)
             reservation.action_send_email()
             
-        _logger.info("reservation  ::::: %s",(reservation.access_token)) 
+            data['success'] = "<strong>Your booking request has been successfully recorded!</strong><br/><br/><span>Your reservation number is: <strong>"+reservation.name+"</strong>.</span><br/><br/><span>We have sent a confirmation email to the following address: <strong>"+reservation.partner_id.email+"</strong>.</span><br/><br/><span>If you do not receive the email in the next few minutes, please check your spam folder or contact us at <b>"+reservation.company_id.email+"</b>.</span>"
+            
+        _logger.info("reservation : %s",(reservation.access_token)) 
         
         return json.dumps(data)
 
@@ -175,12 +177,10 @@ class School(http.Controller):
             domain = []
             domain.append(('token','=',rec.token))
             reservation_ids = request.env['chriamrelax.reservation'].sudo().search(domain)
-            _logger.info("reservation_ids =================================> %s",(reservation_ids))
             state = state_SELECTION[reservation_id.state] if reservation_id else false
-            _logger.info("state =================================> %s",(state))
             """
             state = state_SELECTION[rec.state]
-            _logger.info("state =================================> %s",(rec.state,state_SELECTION[rec.state],state_display_SELECTION[rec.state]))
+            _logger.info("state  : %s",(rec.state,state_SELECTION[rec.state],state_display_SELECTION[rec.state]))
             
             data = {}
             data.update({"system_id" : rec.id})
@@ -204,11 +204,7 @@ class School(http.Controller):
         calendar_js = "<script> var calendarEl = null;  document.addEventListener('DOMContentLoaded', function() {  calendarEl = document.getElementById('calendar'); var calendar = new FullCalendar.Calendar(calendarEl, {themeSystem: 'bootstrap4',locale : 'fr',initialView: 'dayGridMonth',header: {left: 'prev,next today',center: 'title',right: 'month,basicWeek,basicDay'},navLinks: true,height: 'auto',aspectRatio: 2,events: "+str(events)+",eventClick: function(info) {open_modalRequest(info)}, eventDidMount: function(info) {info.el.style.borderRadius = '5%';if (info.event.extendedProps.state){var html = info.el.getElementsByClassName('fc-event-title');html[0].classList.add('completed-event');html[0].innerHTML = '<strong>'+info.event.title+'</strong><br/><strong>Prix : '+info.event.extendedProps.price+' €</strong><br/><strong>'+info.event.extendedProps.state_display+'</strong>';}},}); calendar.render();}); </script>"
         
         calendar_js = "<script> var calendarEl = null;  document.addEventListener('DOMContentLoaded', function() {  calendarEl = document.getElementById('calendar'); var calendar = new FullCalendar.Calendar(calendarEl, {themeSystem: 'bootstrap4',locale : 'fr',initialView: 'dayGridMonth',header: {left: 'prev,next today',center: 'title',right: 'month,basicWeek,basicDay'},navLinks: true,height: 'auto',aspectRatio: 2,events: "+str(events)+",eventClick: function(info) {if (info.event.extendedProps.state == 'false'){open_modalRequest(info)}else{alert('');}}, eventDidMount: function(info) {info.el.style.borderRadius = '5%';if (info.event.extendedProps.state == 'true'){var html = info.el.getElementsByClassName('fc-event-title');html[0].classList.add('completed-event');html[0].innerHTML = '<strong>'+info.event.title+'</strong><br/><strong>Prix : '+info.event.extendedProps.price+' €</strong><br/><strong class="+'to-reserved-class'+">'+info.event.extendedProps.state_display+'</strong>';}else{var html = info.el.getElementsByClassName('fc-event-title');html[0].innerHTML = '<strong>'+info.event.title+'</strong><br/><strong>Prix : '+info.event.extendedProps.price+' €</strong><br/><strong class="+'to-book-class'+">'+info.event.extendedProps.state_display+'</strong>';}},}); calendar.render();}); </script>"
-        
-        #
-       
-        
-        
+          
         vals.update({"calendar_js"      : calendar_js})
         vals.update({"availablity_ids"  : availablity_ids})
         
