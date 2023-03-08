@@ -480,7 +480,7 @@ class Reservation(models.Model):
         
     title = fields.Char(
         string="title",
-        required=True, copy=False, readonly=True,
+        required=False, copy=False, readonly=True,
         index='trigram',
         state={'option': [('readonly', False)]})
     

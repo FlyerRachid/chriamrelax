@@ -46,6 +46,22 @@ class CustomerPortal(portal.CustomerPortal):
 
 class School(http.Controller):
     
+    
+    def verify_recaptcha(self, recaptchaResponse):
+        data = {
+            'secret': '6LdhnuMkAAAAALOVi7JNiEuyF2W_jzfWkSwxMEf6',
+            'response': recaptchaResponse
+        }
+        response = requests.post('https://www.google.com/recaptcha/api/siteverify', data=data)
+        response_json = json.loads(response.text)
+        _logger.info("response_json ====================> %s",(response_json))
+        if response_json['success']:
+            return True
+        else:
+            return False
+        
+
+    
     @http.route('/school', type='http', auth="user", csrf=False, website=True)
     def index(self, **kw):
         partner_id = partner = request.env.user.partner_id
@@ -92,10 +108,16 @@ class School(http.Controller):
     
     @http.route(['/request'], type='http', auth="public", csrf=False)
     def request(self, **kw):
-        _logger.info("params  :::::::: %s",(kw))
+        _logger.info("params : %s",(kw))
         
         data = {}
         data['error'] = True
+        
+        recaptchaResponse = kw.get('recaptchaResponse') or False 
+        # Verify reCAPTCHA response
+        if not recaptchaResponse or not self.verify_recaptcha(recaptchaResponse):
+           data['html'] = "<strong> Warning ! </strong><span>reCAPTCHA verification failed. </span>"
+           return json.dumps(data)
         
         email   = kw.get('partner_email')    or False
         name    = kw.get('partner_name')     or False
@@ -117,8 +139,7 @@ class School(http.Controller):
         if not check_phone:
             data['html'] = "<strong> Warning ! </strong><span>Please enter a valid phone number compatible with your country code.</span>";
             return json.dumps(data)
-        
-        
+                
         domaine = []
         domaine.append(('token','=',kw.get('token')))
         record = request.env['chriamrelax.price'].sudo().search(domaine)
@@ -137,7 +158,8 @@ class School(http.Controller):
             vals.update({'stop' : record.stop})
             vals.update({'residence_id': record.residence_id.id})
             vals.update({'residence': record.residence})
-            reservation      = http.request.env['chriamrelax.reservation'].sudo().create(vals)
+            _logger.info("vals  : %s",(vals))
+            reservation       = http.request.env['chriamrelax.reservation'].sudo().create(vals)
             reservation.title = 'Booking %s  (%s - %s)'%(reservation.residence,record.start_date,record.stop_date)
             reservation.action_send_email()
             
@@ -160,7 +182,7 @@ class School(http.Controller):
         backgroundColor_SELECTION = {
                 'Semaine'      : '#FFE033',
 		        'Week-end'     : '#C7FF33',
-                'Mi-Semaine' : '#33E6FF',
+                'Mi-Semaine'   : '#33E6FF',
 	    }
         
         borderColor_SELECTION = {
@@ -217,7 +239,7 @@ class School(http.Controller):
         
         calendar_js = "<script> var calendarEl = null;  document.addEventListener('DOMContentLoaded', function() {  calendarEl = document.getElementById('calendar'); var calendar = new FullCalendar.Calendar(calendarEl, {themeSystem: 'bootstrap4',locale : 'fr',initialView: 'dayGridMonth',header: {left: 'prev,next today',center: 'title',right: 'month,basicWeek,basicDay'},navLinks: true,height: 'auto',aspectRatio: 2,events: "+str(events)+",eventClick: function(info) {open_modalRequest(info)}, eventDidMount: function(info) {info.el.style.borderRadius = '5%';if (info.event.extendedProps.state){var html = info.el.getElementsByClassName('fc-event-title');html[0].classList.add('completed-event');html[0].innerHTML = '<strong>'+info.event.title+'</strong><br/><strong>Prix : '+info.event.extendedProps.price+' €</strong><br/><strong>'+info.event.extendedProps.state_display+'</strong>';}},}); calendar.render();}); </script>"
         
-        calendar_js = "<script> var calendarEl = null;  document.addEventListener('DOMContentLoaded', function() {  calendarEl = document.getElementById('calendar'); var calendar = new FullCalendar.Calendar(calendarEl, {themeSystem: 'bootstrap4',locale : 'fr',initialView: 'dayGridMonth',header: {left: 'prev,next today',center: 'title',right: 'month,basicWeek,basicDay'},navLinks: true,height: 'auto',aspectRatio: 2,events: "+str(events)+",eventClick: function(info) {if (info.event.extendedProps.state == 'false'){open_modalRequest(info)}else{alert('');}}, eventDidMount: function(info) {info.el.style.borderRadius = '5%';if (info.event.extendedProps.state == 'true'){var html = info.el.getElementsByClassName('fc-event-title');html[0].classList.add('completed-event');html[0].innerHTML = '<strong>'+info.event.title+'</strong><br/><strong>Prix : '+info.event.extendedProps.price+' €</strong><br/><strong class="+'to-reserved-class'+">'+info.event.extendedProps.state_display+'</strong>';}else{var html = info.el.getElementsByClassName('fc-event-title');html[0].innerHTML = '<strong>'+info.event.title+'</strong><br/><strong>Prix : '+info.event.extendedProps.price+' €</strong><br/><strong class="+'to-book-class'+">'+info.event.extendedProps.state_display+'</strong>';}},}); calendar.render();}); </script>"
+        calendar_js = "<script> var calendarEl = null;  document.addEventListener('DOMContentLoaded', function() {  calendarEl = document.getElementById('calendar'); var calendar = new FullCalendar.Calendar(calendarEl, {themeSystem: 'bootstrap4',locale : 'fr',initialView: 'dayGridMonth',header: {left: 'prev,next today',center: 'title',right: 'month,basicWeek,basicDay'},navLinks: true,height: 'auto',aspectRatio: 2,events: "+str(events)+",eventClick: function(info) {if (info.event.extendedProps.state == 'false'){open_modalRequest(info)}else{console.log("");}}, eventDidMount: function(info) {info.el.style.borderRadius = '5%';if (info.event.extendedProps.state == 'true'){var html = info.el.getElementsByClassName('fc-event-title');html[0].classList.add('completed-event');html[0].innerHTML = '<strong>'+info.event.title+'</strong><br/><strong>Prix : '+info.event.extendedProps.price+' €</strong><br/><strong class="+'to-reserved-class'+">'+info.event.extendedProps.state_display+'</strong>';}else{var html = info.el.getElementsByClassName('fc-event-title');html[0].innerHTML = '<strong>'+info.event.title+'</strong><br/><strong>Prix : '+info.event.extendedProps.price+' €</strong><br/><strong class="+'to-book-class'+">'+info.event.extendedProps.state_display+'</strong>';}},}); calendar.render();}); </script>"
         
         vals.update({"residence_name"   : residence_name.title()})
         vals.update({"calendar_js"      : calendar_js})

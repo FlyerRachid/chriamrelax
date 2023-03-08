@@ -68,9 +68,18 @@ function open_modalRequest(info) {
 function sendRequest(info) {
     
       //alert("Sending request ....",data[0]);
+    
       
       var formData = new FormData();
       var http     = new XMLHttpRequest();
+    
+       var recaptchaResponse = grecaptcha.getResponse();
+       if (recaptchaResponse.length === 0) {
+            alert('Please complete the reCAPTCHA');
+            return false;
+          }
+       
+      formData.append('recaptchaResponse'   ,recaptchaResponse);
 
       const tab = data;
 

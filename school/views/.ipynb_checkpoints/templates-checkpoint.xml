@@ -294,9 +294,11 @@
                 }
                   
               </style>
+            
+              
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css"/>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>  
-            <script src="/school/static/src/js/create.js?v=20"/>
+            <script src="/school/static/src/js/create.js?v=21"/>
             <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.1/index.global.min.js'></script>
              
             <!-- 03-03-2023 -->  
@@ -327,6 +329,8 @@
                 </div>
             </div>
             <!--  03-03-2023  -->
+              
+              
             
             <div class="row container-fluid" style="margin: auto !important;">
                 <!-- Button trigger modal -->
@@ -397,6 +401,10 @@ Cleaning will be carried out by a cleaning agency and will be charged on site. W
                             </select> 
                           </div> 
                       </div>
+                        <div class="mb-3">
+                            <div class="g-recaptcha" data-sitekey="6LdhnuMkAAAAACr-5Rk3wSIUjeWvLoTYcu1ZZQF_"></div>
+
+                        </div>
                       <div class="modal-footer">
                         <div class="alert alert-warning" style="width:100%;display:none;text-align : center;" id="warning_request">
                         </div>
@@ -410,6 +418,7 @@ Cleaning will be carried out by a cleaning agency and will be charged on site. W
                 <div id='calendar'></div>
             </div>
             
+             <script src="https://www.google.com/recaptcha/api.js"></script>  
              <script>
                  //https://www.twilio.com/fr/blog/saisie-numeros-telephone-internationaux-html-javascript
                  //https://ipinfo.io/account/home
